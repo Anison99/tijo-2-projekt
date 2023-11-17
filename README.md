@@ -13,10 +13,10 @@ Nasza aplikacja ma na celu zarządzanie zasobami wirtualnej biblioteki, umożliw
 ## Scenariusze testowe dla testera manualnego
 
 ### 1. Scenariusz testowy: Proces dodawania nowej książki 
-Krok 1: Zaloguj się do systemu biblioteki. 
-Krok 2: Przejdź do panelu administratora. 
-Krok 3: Dodaj nową książkę, wprowadzając poprawne informacje. 
-Krok 4: Zweryfikuj obecność nowej pozycji w katalogu. 
+- Krok 1: Zaloguj się do systemu biblioteki. 
+- Krok 2: Przejdź do panelu administratora. 
+- Krok 3: Dodaj nową książkę, wprowadzając poprawne informacje. 
+- Krok 4: Zweryfikuj obecność nowej pozycji w katalogu. 
 
 ### 2. Scenariusz testowy: Proces usuwania książki 
 Krok 1: Zaloguj się do systemu biblioteki. 
