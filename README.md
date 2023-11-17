@@ -2,7 +2,8 @@
 
 ### Autorzy: Damian Majka, Dominik Kiwior, Anita Zych
 ### Temat: Aplikacja do zarządzania wirtualną biblioteką
-### Opis projektu: Nasza aplikacja ma na celu zarządzanie zasobami wirtualnej biblioteki, umożliwiając użytkownikom wyszukiwanie, rezerwację, wypożyczanie oraz sprawdzenie dostępności książek. Można utworzyć nowe konto użytkownika, zalogować się do istniejacego konta. Z panelu zarządzania biblioteką można dodąc do bazy nowe konto (rejestracja).
+### Opis projektu:
+Nasza aplikacja ma na celu zarządzanie zasobami wirtualnej biblioteki, umożliwiając użytkownikom wyszukiwanie, rezerwację, wypożyczanie oraz sprawdzenie dostępności książek. Można utworzyć nowe konto użytkownika, zalogować się do istniejacego konta. Z panelu zarządzania biblioteką można dodąc do bazy nowe konto (rejestracja).
 
 ## Uruchomienie testów jednostkowych i integracyjnych
 - sklonuj repozytorium do folderu na swoim urządzeniu
