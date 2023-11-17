@@ -47,4 +47,8 @@ public class Reservation {
     public void setEndDate(LocalDateTime endDate) {
         this.endDate = endDate;
     }
+
+    public Object getUser() {
+        return null;
+    }
 }

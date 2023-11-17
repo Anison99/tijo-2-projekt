@@ -14,6 +14,9 @@ public class Book {
     private String author;
     private boolean isReserved;
 
+    public Book(String title, String author, String isbn) {
+    }
+
     public Long getId() {
         return id;
     }
@@ -44,5 +47,13 @@ public class Book {
 
     public void setReserved(boolean reserved) {
         isReserved = reserved;
+    }
+
+    public String getStatus() {
+        return null;
+    }
+
+    public User getReservedBy() {
+        return null;
     }
 }
