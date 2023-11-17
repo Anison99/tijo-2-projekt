@@ -12,7 +12,7 @@ import org.junit.jupiter.api.Test;
 
 import java.util.List;
 
-public class LibraryTests {
+public class LibraryUnitTests {
 
     private BookService bookService;
     private UserService userService;
@@ -64,7 +64,6 @@ public class LibraryTests {
 
         // todo: Zdefiniuj oczekiwaną datę przedłużenia książki na podstawie implementacji. Może to być bieżąca data oddania + 7 dni
         // todo: Data przedłużenia nie może być przekroczona
-
     }
 
     @Test

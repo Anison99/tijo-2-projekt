@@ -39,4 +39,11 @@ public class User {
     public void setPassword(String password) {
         this.password = password;
     }
+
+    public User orElse(Object o) {
+        return null;
+    }
+
+    public void setEmail(String mail) {
+    }
 }

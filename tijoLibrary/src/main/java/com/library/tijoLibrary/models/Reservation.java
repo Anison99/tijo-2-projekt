@@ -51,4 +51,14 @@ public class Reservation {
     public Object getUser() {
         return null;
     }
+
+
+    public void setBookTitle(String s) {
+    }
+
+    public void setUser(User user) {
+    }
+
+    public void extendReservation() {
+    }
 }
