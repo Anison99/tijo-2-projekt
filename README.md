@@ -12,19 +12,19 @@ Nasza aplikacja ma na celu zarządzanie zasobami wirtualnej biblioteki, umożliw
 
 ## Scenariusze testowe dla testera manualnego
 
-### 1.Scenariusz testowy: Proces dodawania nowej książki 
+### 1. Scenariusz testowy: Proces dodawania nowej książki 
 Krok 1: Zaloguj się do systemu biblioteki. 
 Krok 2: Przejdź do panelu administratora. 
 Krok 3: Dodaj nową książkę, wprowadzając poprawne informacje. 
 Krok 4: Zweryfikuj obecność nowej pozycji w katalogu. 
 
-### 2.Scenariusz testowy: Proces usuwania książki 
+### 2. Scenariusz testowy: Proces usuwania książki 
 Krok 1: Zaloguj się do systemu biblioteki. 
 Krok 2: Przejdź do panelu administratora. 
 Krok 3: Wybierz książkę do usunięcia i potwierdź operację. 
 Krok 4: Sprawdź, czy książka została usunięta z katalogu i czy wszelkie rezerwacje zostały anulowane. 
 
-### 3.Scenariusz testowy: Proces rezerwacji książki 
+### 3 .Scenarusz testowy: Proces rezerwacji książki 
 Krok 1: Zaloguj się na konto użytkownika. 
 Krok 2: Przeszukaj katalog i wybierz dostępną książkę. 
 Krok 3: Rezerwuj książkę i sprawdź potwierdzenie rezerwacji. 
@@ -71,4 +71,3 @@ Krok 1: Zaloguj się na konto użytkownika.
 Krok 2: Sprawdź listę wypożyczonych książek.
 Krok 3: Upewnij się, że system wyświetla powiadomienie o zbliżającym się terminie zwrotu książki.
 Krok 4: Zweryfikuj, czy powiadomienie jest wysyłane z odpowiednim wyprzedzeniem.
-## Jak uruchomić aplikację?
