@@ -46,4 +46,48 @@ public class User {
 
     public void setEmail(String mail) {
     }
+
+    public void borrowBook(Book book) {
+    }
+
+    public boolean hasReceivedEmailNotification() {
+        return false;
+    }
+
+    public String getLastEmailNotification() {
+        return null;
+    }
+
+    public void updateName(String annaKowalska) {
+    }
+
+    public boolean hasReceivedMessageNotification() {
+        return false;
+    }
+
+    public String getLastMessageNotification() {
+        return null;
+    }
+
+    public boolean hasReceivedNotification() {
+        return false;
+    }
+
+    public String getLastNotification() {
+        return null;
+    }
+
+    public void rateBook(Book ratedBook, int i) {
+    }
+
+    public void addReview(Book book1, String s, int i) {
+    }
+
+    public Book getRecommendedBook() {
+        return null;
+    }
+
+    public String getActivityHistory() {
+        return null;
+    }
 }
