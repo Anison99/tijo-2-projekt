@@ -186,5 +186,45 @@ public class LibraryUnitTests {
     public void testBookCategorization() {
         // todo: rozwiń implementacje
     }
+    @Test
+    public void testEmailNotificationService() {
+        // todo: rozwiń implementacje
+    }
+
+    @Test
+    public void testMessageNotificationService() {
+        // todo: rozwiń implementacje
+    }
+    @Test
+    public void testAddingUserToWaitingList() {
+        // todo: rozwiń implementacje
+    }
+
+    @Test
+    public void testNotificationToFirstUserInWaitingList() {
+        // todo: rozwiń implementacje
+    }
+    @Test
+    public void testSubmittingRating() {
+        // todo: rozwiń implementacje
+    }
+
+    @Test
+    public void testImpactOfReviews() {
+        // todo: rozwiń implementacje
+    }
+    @Test
+    public void testUserActivityHistory() {
+        // todo: rozwiń implementacje
+    }
+
+    @Test
+    public void testUserActivityMetrics() {
+        // todo: rozwiń implementacje
+    }
+
+
+
+
 }
 
