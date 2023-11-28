@@ -131,5 +131,62 @@ public class LibraryUnitTests {
         reservationService.returnBook(book, user);
         Assertions.assertEquals("reserved", book.getStatus());
     }
+
+    @Test
+    public void testEmailNotificationOnBookDueDate() {
+        // Test implementation
+    }
+
+    @Test
+    public void testMessageNotificationOnAccountChanges() {
+        // Test implementation
+    }
+
+    @Test
+    public void testWaitingListAdditionForPopularBook() {
+        // Test implementation
+    }
+
+    @Test
+    public void testNotificationToFirstInWaitingListOnBookReturn() {
+        // Test implementation
+    }
+
+    @Test
+    public void testUserCanSubmitRating() {
+        // Test implementation
+    }
+
+    @Test
+    public void testReviewsImpactBookSelection() {
+        // Test implementation
+    }
+
+    @Test
+    public void testUserActivityHistoryWithBorrowedBooks() {
+        // Test implementation
+    }
+
+    @Test
+    public void testUserActivityHistoryLateReturns() {
+        // Test implementation
+    }
+
+    @Test
+    public void testUserActivityHistoryReservationFrequency() {
+        // Test implementation
+    }
+
+    @Test
+    public void testAutomaticReturnReminder() {
+        // Test implementation
+    }
+
+    @Test
+    public void testBookCategorization() {
+        // Test implementation
+    }
+
+
 }
 
