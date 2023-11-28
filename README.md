@@ -71,3 +71,50 @@ Nasza aplikacja ma na celu zarządzanie zasobami wirtualnej biblioteki, umożliw
 - Krok 2: Sprawdź listę wypożyczonych książek.
 - Krok 3: Upewnij się, że system wyświetla powiadomienie o zbliżającym się terminie zwrotu książki.
 - Krok 4: Zweryfikuj, czy powiadomienie jest wysyłane z odpowiednim wyprzedzeniem.
+
+### 12.Scenariusz testowy: Test wyszukiwania książki, która jest w bibliotece
+- Krok 1: Zaloguj się na konto użytkownika
+- Krok 2: W panelu wyszukiwania wpisz nazwę książki, która jest w bibliotece
+- Krok 3: Zweryfikuj, czy wyświetla się informacja o książce
+
+### 13.Scenariusz testowy: Test sprawdzający poprawność adresu e-mail:
+- Krok 1: Spróbuj dodać błędny adres e-mail do otrzymywania powiadomień.
+- Krok 2: Zweryfikuj, czy system odpowiednio reaguje i nie zapisuje niepoprawnego adresu e-mail.
+
+### 14.Scenariusz testowy: Test oceny bez dodawania recenzji:
+- Krok 1: Oceń książkę, nie dodając przy tym recenzji.
+- Krok 2: Sprawdź, czy system poprawnie obsługuje ocenę bez recenzji.
+
+### 15.Scenariusz testowy: Test dodawania oceny tylko przez zalogowanego użytkownika
+- Krok 1: Wejdź na stronę
+- Krok 2: Dodaj ocenę bez logowania
+- Krok 3: Sprawdź, czy ocena nie została dodana
+- Krok 4: Zaloguj się na konto
+- Krok 5: Dodaj ocenę
+- Krok 6: Sprawdź, czy ocena została dodana
+
+### 16.Scenariusz testowy: Test dodawania kategorii do książki:
+- Krok 1: Dodaj nową kategorię do książki.
+- Krok 2: Zweryfikuj, czy kategoria została dodana poprawnie.
+
+### 17.Scenariusz testowy: Test dodawania nowej kategorii:
+- Krok 1: Dodaj nową kategorię do systemu.
+- Krok 2: Przyporządkuj książkę do nowej kategorii.
+- Krok 3: Zweryfikuj, czy kategoria została dodana i przyporządkowana poprawnie.
+
+### 18.Scenariusz testowy: Test automatycznego przypomnienia przed terminem zwrotu:
+- Krok 1: Wypożycz książkę.
+- Krok 2: Sprawdź, czy system automatycznie przypomina o zbliżającym się terminie zwrotu przed odpowiednim okresem.
+
+### 19.Scenariusz testowy: Test śledzenia ilości wypożyczonych książek:
+- Krok 1: Wypożycz kilka książek.
+- Krok 2: Sprawdź, czy historia aktywności pokazuje poprawną ilość wypożyczonych książek.
+
+### 20.Scenariusz testowy: Test śledzenia opóźnień w zwrotach:
+- Krok 1: Zwróć książkę z opóźnieniem.
+- Krok 2: Zweryfikuj, czy historia aktywności uwzględnia opóźnienie w zwrocie.
+
+### 21.Scenariusz testowy: Test usuwania recenzji:
+- Krok 1: Dodaj recenzję do książki.
+- Krok 2: Usuń swoją recenzję.
+- Krok 3: Zweryfikuj, czy recenzja została poprawnie usunięta.
