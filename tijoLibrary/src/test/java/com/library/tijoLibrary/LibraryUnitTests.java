@@ -222,9 +222,5 @@ public class LibraryUnitTests {
     public void testUserActivityMetrics() {
         // todo: rozwiń implementacje
     }
-
-
-
-
 }
 

@@ -182,4 +182,76 @@ public class LibraryIntegrationTests {
         assertEquals(1, user1Reservations.size());
         assertEquals(1, user2Reservations.size());
     }
+    @Test
+    public void testEmailNotificationIntegration() {
+        // todo: rozwiń implementacje
+    }
+
+    @Test
+    public void testMessageNotificationIntegration() {
+        // todo: rozwiń implementacje
+    }
+    @Test
+    public void testWaitingListIntegration() {
+        // todo: rozwiń implementacje
+    }
+
+    @Test
+    public void testNotificationOnWaitingListIntegration() {
+        // todo: rozwiń implementacje
+    }
+    @Test
+    public void testRatingIntegration() {
+        // todo: rozwiń implementacje
+    }
+
+    @Test
+    public void testReviewsImpactIntegration() {
+        // todo: rozwiń implementacje
+    }
+
+    @Test
+    public void testUserActivityHistoryIntegration() {
+        // todo: rozwiń implementacje
+    }
+
+    @Test
+    public void testUserActivityMetricsIntegration() {
+        // todo: rozwiń implementacje
+    }
+
+    @Test
+    public void testReturnReminderIntegration() {
+        // todo: rozwiń implementacje
+    }
+
+    @Test
+    public void testBookCategorizationIntegration() {
+        // todo: rozwiń implementacje
+    }
+
+    @Test
+    public void testBookRecommendationsIntegration() {
+        // todo: rozwiń implementacje
+    }
+
+    @Test
+    public void testNotificationServiceIntegration() {
+        // todo: rozwiń implementacje
+    }
+
+    @Test
+    public void testWaitingListServiceIntegration() {
+        // todo: rozwiń implementacje
+    }
+
+    @Test
+    public void testRatingServiceIntegration() {
+        // todo: rozwiń implementacje
+    }
+
+    @Test
+    public void testUserActivityServiceIntegration() {
+        // todo: rozwiń implementacje
+    }
 }
