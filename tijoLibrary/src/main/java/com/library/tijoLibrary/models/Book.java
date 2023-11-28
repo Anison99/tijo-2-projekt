@@ -56,4 +56,18 @@ public class Book {
     public User getReservedBy() {
         return null;
     }
+
+    public void addToWaitingList(User user1) {
+    }
+
+    public boolean isInWaitingList(User user1) {
+        return false;
+    }
+
+    public void returnBook() {
+    }
+
+    public int getAverageRating() {
+        return 0;
+    }
 }

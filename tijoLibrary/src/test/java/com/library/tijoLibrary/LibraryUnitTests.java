@@ -10,7 +10,10 @@ import org.junit.jupiter.api.Assertions;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
 
+import java.time.LocalDate;
 import java.util.List;
+
+import static org.junit.jupiter.api.Assertions.*;
 
 public class LibraryUnitTests {
 
@@ -36,7 +39,7 @@ public class LibraryUnitTests {
     public void testAddingBook() {
         Book newBook = new Book("Title", "Author", "ISBN");
         bookService.addBook(newBook);
-        Assertions.assertTrue(bookService.getBooks().contains(newBook));
+        assertTrue(bookService.getBooks().contains(newBook));
     }
 
     @Test
@@ -45,8 +48,8 @@ public class LibraryUnitTests {
         Book book = new Book("Title", "Author", "ISBN");
         bookService.addBook(book);
         reservationService.reserveBook(book, user);
-        Assertions.assertEquals("reserved", book.getStatus());
-        Assertions.assertEquals(user, book.getReservedBy());
+        assertEquals("reserved", book.getStatus());
+        assertEquals(user, book.getReservedBy());
     }
 
     @Test
@@ -54,7 +57,7 @@ public class LibraryUnitTests {
         Book book = new Book("Title", "Author", "ISBN");
         bookService.addBook(book);
         bookService.removeBook(book);
-        Assertions.assertFalse(bookService.getBooks().contains(book));
+        assertFalse(bookService.getBooks().contains(book));
     }
 
     @Test
@@ -67,7 +70,7 @@ public class LibraryUnitTests {
         reservationService.extendReservation(book, user, 7);
 
         short expectedExtendedDate = 0;
-        Assertions.assertEquals(expectedExtendedDate, reservationService.getReturnDate(book, user));
+        assertEquals(expectedExtendedDate, reservationService.getReturnDate(book, user));
 
         // todo: Zdefiniuj oczekiwaną datę przedłużenia książki na podstawie implementacji. Może to być bieżąca data oddania + 7 dni
         // todo: Data przedłużenia nie może być przekroczona
@@ -82,8 +85,8 @@ public class LibraryUnitTests {
         User user = new User("username");
         reservationService.reserveBook(reservedBook, user);
 
-        Assertions.assertTrue(bookService.checkAvailability(availableBook));
-        Assertions.assertFalse(bookService.checkAvailability(reservedBook));
+        assertTrue(bookService.checkAvailability(availableBook));
+        assertFalse(bookService.checkAvailability(reservedBook));
     }
 
     @Test
@@ -95,7 +98,7 @@ public class LibraryUnitTests {
 
         List<Reservation> loanHistory = reservationService.getLoanHistory(user);
 
-        Assertions.assertTrue(loanHistory.stream().anyMatch(reservation ->
+        assertTrue(loanHistory.stream().anyMatch(reservation ->
                 reservation.getBook().equals(book) && reservation.getUser().equals(user)));
     }
 
@@ -106,11 +109,11 @@ public class LibraryUnitTests {
 
         userService.registerUser(username, password);
 
-        Assertions.assertTrue(userService.isUserRegistered(username));
+        assertTrue(userService.isUserRegistered(username));
         User loggedInUser = userService.login(username, password);
 
         Assertions.assertNotNull(loggedInUser);
-        Assertions.assertEquals(username, loggedInUser.getUsername());
+        assertEquals(username, loggedInUser.getUsername());
     }
 
     @Test
@@ -122,7 +125,7 @@ public class LibraryUnitTests {
 
         User loggedInUser = userService.login(username, password);
         Assertions.assertNotNull(loggedInUser);
-        Assertions.assertEquals(username, loggedInUser.getUsername());
+        assertEquals(username, loggedInUser.getUsername());
     }
 
     @Test
@@ -132,16 +135,17 @@ public class LibraryUnitTests {
         bookService.addBook(book);
 
         reservationService.reserveBook(book, user);
-        Assertions.assertEquals("reserved", book.getStatus());
+        assertEquals("reserved", book.getStatus());
         reservationService.borrowBook(book, user);
-        Assertions.assertEquals("borrowed", book.getStatus());
+        assertEquals("borrowed", book.getStatus());
         reservationService.returnBook(book, user);
-        Assertions.assertEquals("reserved", book.getStatus());
+        assertEquals("reserved", book.getStatus());
     }
 
+    // ------------------------------------------------------
     @Test
     public void testEmailNotificationOnBookDueDate() {
-         User user = new User("jan.kowalski@example.com", "Jan Kowalski");
+         User user = new User("user");
          Book book = new Book("1234567890", "Test Book", "Author");
          user.borrowBook(book);
 
@@ -153,7 +157,7 @@ public class LibraryUnitTests {
 
     @Test
     public void testMessageNotificationOnAccountChanges() {
-        User user = new User("anna.nowak@example.com", "Anna Nowak");
+        User user = new User("user");
         user.updateName("Anna Kowalska");
 
         assertTrue(user.hasReceivedMessageNotification());
@@ -164,8 +168,8 @@ public class LibraryUnitTests {
     @Test
     public void testWaitingListAdditionForPopularBook() {
          Book popularBook = new Book("9876543210", "Popular Book", "Famous Author");
-         User user1 = new User("adam.nowak@example.com", "Adam Nowak");
-         User user2 = new User("ewa.kowalska@example.com", "Ewa Kowalska");
+         User user1 = new User("user");
+         User user2 = new User("user");
  
          popularBook.addToWaitingList(user1);
          popularBook.addToWaitingList(user2);
@@ -177,8 +181,8 @@ public class LibraryUnitTests {
     @Test
     public void testNotificationToFirstInWaitingListOnBookReturn() {
         Book returnedBook = new Book("5678901234", "Returned Book", "Some Author");
-        User user1 = new User("john.doe@example.com", "John Doe");
-        User user2 = new User("jane.smith@example.com", "Jane Smith");
+        User user1 = new User("user");
+        User user2 = new User("user");
 
         returnedBook.addToWaitingList(user1);
         returnedBook.addToWaitingList(user2);
@@ -195,7 +199,7 @@ public class LibraryUnitTests {
     @Test
     public void testUserCanSubmitRating() {
         Book ratedBook = new Book("9876543210", "Rated Book", "Another Author");
-        User user = new User("alice.jones@example.com", "Alice Jones");
+        User user = new User("user");
 
         user.borrowBook(ratedBook);
 
@@ -208,7 +212,7 @@ public class LibraryUnitTests {
     public void testReviewsImpactBookSelection() {
         Book book1 = new Book("1111111111", "Book 1", "Author 1");
         Book book2 = new Book("2222222222", "Book 2", "Author 2");
-        User user = new User("bob.smith@example.com", "Bob Smith");
+        User user = new User("user");
 
         user.addReview(book1, "Great book!", 5);
         user.addReview(book2, "Not so good.", 2);
@@ -222,7 +226,7 @@ public class LibraryUnitTests {
 
     @Test
     public void testUserActivityHistoryWithBorrowedBooks() {
-        User user = new User("mary.jones@example.com", "Mary Jones");
+        User user = new User("user");
         Book book1 = new Book("1111111111", "Book 1", "Author 1");
         Book book2 = new Book("2222222222", "Book 2", "Author 2");
 
@@ -236,7 +240,7 @@ public class LibraryUnitTests {
 
     @Test
     public void testUserActivityHistoryLateReturns() {
-        User user = new User("peter.smith@example.com", "Peter Smith");
+        User user = new User("user");
         Book overdueBook = new Book("3333333333", "Overdue Book", "Author 3");
 
         user.borrowBook(overdueBook);
@@ -251,7 +255,7 @@ public class LibraryUnitTests {
 
     @Test
     public void testUserActivityHistoryReservationFrequency() {
-         User user = new User("emma.white@example.com", "Emma White");
+         User user = new User("user");
          Book reservedBook = new Book("4444444444", "Reserved Book", "Author 4");
  
          reservedBook.addToWaitingList(user);
@@ -263,7 +267,7 @@ public class LibraryUnitTests {
 
     @Test
     public void testAutomaticReturnReminder() {
-        User user = new User("alex.brown@example.com", "Alex Brown");
+        User user = new User("user");
         Book borrowedBook = new Book("5555555555", "Borrowed Book", "Author 5");
 
         user.borrowBook(borrowedBook);
@@ -315,4 +319,3 @@ public class LibraryUnitTests {
         // todo: rozwiń implementacje
     }
 }
-
