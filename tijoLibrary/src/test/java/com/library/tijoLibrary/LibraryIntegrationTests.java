@@ -184,7 +184,7 @@ public class LibraryIntegrationTests {
     }
     @Test
     public void testEmailNotificationIntegration() {
-        User user = new User("test.user@example.com", "Test User");
+        User user = new User("user");
         Book borrowedBook = new Book("1234567890", "Integrated Book", "Author Z");
 
         user.borrowBook(borrowedBook);
@@ -194,7 +194,7 @@ public class LibraryIntegrationTests {
 
     @Test
     public void testMessageNotificationIntegration() {
-        User user = new User("test.user@example.com", "Test User");
+        User user = new User("user");
         Book reservedBook = new Book("9876543210", "Reserved Book", "Author W");
 
         user.reserveBook(reservedBook);
@@ -203,8 +203,8 @@ public class LibraryIntegrationTests {
     }
     @Test
     public void testWaitingListIntegration() {
-        User user1 = new User("user1@example.com", "User 1");
-        User user2 = new User("user2@example.com", "User 2");
+        User user1 = new User("user");
+        User user2 = new User("user2");
         Book popularBook = new Book("111122223333", "Popular Book", "Author X");
 
         popularBook.addToWaitingList(user1);
@@ -216,8 +216,8 @@ public class LibraryIntegrationTests {
 
     @Test
     public void testNotificationOnWaitingListIntegration() {
-        User user1 = new User("user1@example.com", "User 1");
-        User user2 = new User("user2@example.com", "User 2");
+        User user1 = new User("User 1");
+        User user2 = new User("User 2");
         Book highDemandBook = new Book("333344445555", "High Demand Book", "Author Y");
 
         highDemandBook.addToWaitingList(user1);
@@ -230,7 +230,7 @@ public class LibraryIntegrationTests {
     }
     @Test
     public void testRatingIntegration() {
-        User user = new User("test.user@example.com", "Test User");
+        User user = new User("User");
         Book ratedBook = new Book("444455556666", "Rated Book", "Author Z");
 
         user.borrowBook(ratedBook);
@@ -242,8 +242,8 @@ public class LibraryIntegrationTests {
 
     @Test
     public void testReviewsImpactIntegration() {
-        User user1 = new User("user1@example.com", "User 1");
-        User user2 = new User("user2@example.com", "User 2");
+        User user1 = new User("User 1");
+        User user2 = new User("User 2");
         Book reviewedBook = new Book("777788889999", "Reviewed Book", "Author X");
 
         user1.borrowBook(reviewedBook);
@@ -256,7 +256,7 @@ public class LibraryIntegrationTests {
 
     @Test
     public void testUserActivityHistoryIntegration() {
-        User user = new User("test.user@example.com", "Test User");
+        User user = new User("User");
         Book borrowedBook = new Book("1234567890", "Integrated Book", "Author Z");
 
         user.borrowBook(borrowedBook);
@@ -266,7 +266,7 @@ public class LibraryIntegrationTests {
 
     @Test
     public void testUserActivityMetricsIntegration() {
-        User user = new User("test.user@example.com", "Test User");
+        User user = new User("User");
         Book borrowedBook1 = new Book("111122223333", "Book 1", "Author X");
         Book borrowedBook2 = new Book("444455556666", "Book 2", "Author Y");
 
@@ -278,7 +278,7 @@ public class LibraryIntegrationTests {
 
     @Test
     public void testReturnReminderIntegration() {
-        User user = new User("test.user@example.com", "Test User");
+        User user = new User("User");
         Book borrowedBook = new Book("777788889999", "Reminder Book", "Author W");
 
         user.borrowBook(borrowedBook);
@@ -286,6 +286,10 @@ public class LibraryIntegrationTests {
         simulatePassageOfTime(14);
 
         assertTrue(user.isReturnReminderSent());
+    }
+
+    private void simulatePassageOfTime(int i) {
+        
     }
 
     @Test
