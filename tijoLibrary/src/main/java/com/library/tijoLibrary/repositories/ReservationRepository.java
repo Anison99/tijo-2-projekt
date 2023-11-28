@@ -16,5 +16,4 @@ public interface ReservationRepository extends JpaRepository<Reservation, Long> 
     }
 
     List<Reservation> findByUser(User user);
-    // Możesz dodać dodatkowe metody związane z rezerwacjami
 }

@@ -19,7 +19,6 @@ public class UserService implements UserDetailsService {
 
     @Override
     public UserDetails loadUserByUsername(String username) throws UsernameNotFoundException {
-        // Implementacja logiki ładowania użytkownika
         return null;
     }
 
@@ -36,6 +35,4 @@ public class UserService implements UserDetailsService {
 
     public void addUser(String username, String password) {
     }
-
-    // implementacje metod operacji na użytkownikach
 }

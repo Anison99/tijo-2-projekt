@@ -30,5 +30,4 @@ public class BookService {
         return false;
     }
 
-    // implementacje metod operacji na książkach
 }

@@ -39,5 +39,4 @@ public class ReservationService {
     public void returnBook(Book book, User user) {
     }
 
-    // implementacje metod operacji na rezerwacjach
 }

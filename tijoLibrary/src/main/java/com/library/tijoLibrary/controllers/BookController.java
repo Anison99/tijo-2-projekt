@@ -13,5 +13,4 @@ public class BookController {
         this.bookService = bookService;
     }
 
-    // implementacje endpointów CRUD dla książek
 }

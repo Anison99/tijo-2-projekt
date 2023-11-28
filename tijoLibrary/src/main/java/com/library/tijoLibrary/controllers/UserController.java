@@ -13,5 +13,4 @@ public class UserController {
         this.userService = userService;
     }
 
-    // implementacje endpointów związanych z użytkownikami
 }
