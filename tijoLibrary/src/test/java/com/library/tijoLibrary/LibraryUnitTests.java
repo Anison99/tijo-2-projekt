@@ -25,6 +25,13 @@ public class LibraryUnitTests {
         reservationService = new ReservationService();
     }
 
+    private void simulatePassageOfTime(int days) {
+       
+        LocalDate currentDate = LocalDate.now();
+        LocalDate simulatedDate = currentDate.plusDays(days);
+        SystemDate.setCurrentDate(simulatedDate);
+    }
+
     @Test
     public void testAddingBook() {
         Book newBook = new Book("Title", "Author", "ISBN");
@@ -134,52 +141,137 @@ public class LibraryUnitTests {
 
     @Test
     public void testEmailNotificationOnBookDueDate() {
-        // todo: rozwiń implementacje
+         User user = new User("jan.kowalski@example.com", "Jan Kowalski");
+         Book book = new Book("1234567890", "Test Book", "Author");
+         user.borrowBook(book);
+
+         simulatePassageOfTime(5);
+         assertTrue(user.hasReceivedEmailNotification());
+         String expectedNotification = "Przypominamy o zbliżającym się terminie zwrotu książki: Test Book.";
+         assertEquals(expectedNotification, user.getLastEmailNotification());
     }
 
     @Test
     public void testMessageNotificationOnAccountChanges() {
-        // todo: rozwiń implementacje
+        User user = new User("anna.nowak@example.com", "Anna Nowak");
+        user.updateName("Anna Kowalska");
+
+        assertTrue(user.hasReceivedMessageNotification());
+        String expectedNotification = "Twoje konto zostało zaktualizowane. Nowe imię: Anna Kowalska.";
+        assertEquals(expectedNotification, user.getLastMessageNotification());
     }
 
     @Test
     public void testWaitingListAdditionForPopularBook() {
-        // todo: rozwiń implementacje
+         Book popularBook = new Book("9876543210", "Popular Book", "Famous Author");
+         User user1 = new User("adam.nowak@example.com", "Adam Nowak");
+         User user2 = new User("ewa.kowalska@example.com", "Ewa Kowalska");
+ 
+         popularBook.addToWaitingList(user1);
+         popularBook.addToWaitingList(user2);
+ 
+         assertTrue(popularBook.isInWaitingList(user1));
+         assertTrue(popularBook.isInWaitingList(user2));
     }
 
     @Test
     public void testNotificationToFirstInWaitingListOnBookReturn() {
-        // todo: rozwiń implementacje
+        Book returnedBook = new Book("5678901234", "Returned Book", "Some Author");
+        User user1 = new User("john.doe@example.com", "John Doe");
+        User user2 = new User("jane.smith@example.com", "Jane Smith");
+
+        returnedBook.addToWaitingList(user1);
+        returnedBook.addToWaitingList(user2);
+
+        returnedBook.returnBook();
+
+        assertTrue(user1.hasReceivedNotification());
+        assertEquals("Twoja zarezerwowana książka jest teraz dostępna: Returned Book.", user1.getLastNotification());
+
+        assertFalse(user2.hasReceivedNotification());
+        assertNull(user2.getLastNotification());
     }
 
     @Test
     public void testUserCanSubmitRating() {
-        // todo: rozwiń implementacje
+        Book ratedBook = new Book("9876543210", "Rated Book", "Another Author");
+        User user = new User("alice.jones@example.com", "Alice Jones");
+
+        user.borrowBook(ratedBook);
+
+        user.rateBook(ratedBook, 4);
+
+        assertEquals(4, ratedBook.getAverageRating(), 0.001);
     }
 
     @Test
     public void testReviewsImpactBookSelection() {
-        // todo: rozwiń implementacje
+        Book book1 = new Book("1111111111", "Book 1", "Author 1");
+        Book book2 = new Book("2222222222", "Book 2", "Author 2");
+        User user = new User("bob.smith@example.com", "Bob Smith");
+
+        user.addReview(book1, "Great book!", 5);
+        user.addReview(book2, "Not so good.", 2);
+
+        assertEquals(5, book1.getAverageRating(), 0.001);
+        assertEquals(2, book2.getAverageRating(), 0.001);
+
+        Book recommendedBook = user.getRecommendedBook();
+        assertEquals(book1, recommendedBook);
     }
 
     @Test
     public void testUserActivityHistoryWithBorrowedBooks() {
-        // todo: rozwiń implementacje
+        User user = new User("mary.jones@example.com", "Mary Jones");
+        Book book1 = new Book("1111111111", "Book 1", "Author 1");
+        Book book2 = new Book("2222222222", "Book 2", "Author 2");
+
+        user.borrowBook(book1);
+        user.borrowBook(book2);
+
+        String activityHistory = user.getActivityHistory();
+        String expectedHistory = "Wypożyczono książkę: Book 1\nWypożyczono książkę: Book 2";
+        assertEquals(expectedHistory, activityHistory);
     }
 
     @Test
     public void testUserActivityHistoryLateReturns() {
-        // todo: rozwiń implementacje
+        User user = new User("peter.smith@example.com", "Peter Smith");
+        Book overdueBook = new Book("3333333333", "Overdue Book", "Author 3");
+
+        user.borrowBook(overdueBook);
+
+        simulatePassageOfTime(10);
+        overdueBook.returnBook();
+
+        String activityHistory = user.getActivityHistory();
+        String expectedHistory = "Wypożyczono książkę: Overdue Book\nZwrócono książkę z opóźnieniem: Overdue Book";
+        assertEquals(expectedHistory, activityHistory);
     }
 
     @Test
     public void testUserActivityHistoryReservationFrequency() {
-        // todo: rozwiń implementacje
+         User user = new User("emma.white@example.com", "Emma White");
+         Book reservedBook = new Book("4444444444", "Reserved Book", "Author 4");
+ 
+         reservedBook.addToWaitingList(user);
+ 
+         String activityHistory = user.getActivityHistory();
+         String expectedHistory = "Dodano do listy oczekujących: Reserved Book";
+         assertEquals(expectedHistory, activityHistory);
     }
 
     @Test
     public void testAutomaticReturnReminder() {
-        // todo: rozwiń implementacje
+        User user = new User("alex.brown@example.com", "Alex Brown");
+        Book borrowedBook = new Book("5555555555", "Borrowed Book", "Author 5");
+
+        user.borrowBook(borrowedBook);
+
+        simulatePassageOfTime(7);
+
+        assertTrue(user.hasReceivedNotification());
+        assertEquals("Przypomnienie: Termin zwrotu książki Approaching Deadline Book zbliża się.", user.getLastNotification());
     }
 
     @Test
