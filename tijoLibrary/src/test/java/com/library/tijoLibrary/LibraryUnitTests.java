@@ -134,59 +134,57 @@ public class LibraryUnitTests {
 
     @Test
     public void testEmailNotificationOnBookDueDate() {
-        // Test implementation
+        // todo: rozwiń implementacje
     }
 
     @Test
     public void testMessageNotificationOnAccountChanges() {
-        // Test implementation
+        // todo: rozwiń implementacje
     }
 
     @Test
     public void testWaitingListAdditionForPopularBook() {
-        // Test implementation
+        // todo: rozwiń implementacje
     }
 
     @Test
     public void testNotificationToFirstInWaitingListOnBookReturn() {
-        // Test implementation
+        // todo: rozwiń implementacje
     }
 
     @Test
     public void testUserCanSubmitRating() {
-        // Test implementation
+        // todo: rozwiń implementacje
     }
 
     @Test
     public void testReviewsImpactBookSelection() {
-        // Test implementation
+        // todo: rozwiń implementacje
     }
 
     @Test
     public void testUserActivityHistoryWithBorrowedBooks() {
-        // Test implementation
+        // todo: rozwiń implementacje
     }
 
     @Test
     public void testUserActivityHistoryLateReturns() {
-        // Test implementation
+        // todo: rozwiń implementacje
     }
 
     @Test
     public void testUserActivityHistoryReservationFrequency() {
-        // Test implementation
+        // todo: rozwiń implementacje
     }
 
     @Test
     public void testAutomaticReturnReminder() {
-        // Test implementation
+        // todo: rozwiń implementacje
     }
 
     @Test
     public void testBookCategorization() {
-        // Test implementation
+        // todo: rozwiń implementacje
     }
-
-
 }
 
