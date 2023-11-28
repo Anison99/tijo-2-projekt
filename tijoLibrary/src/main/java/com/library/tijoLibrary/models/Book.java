@@ -60,8 +60,8 @@ public class Book {
     public void addToWaitingList(User user1) {
     }
 
-    public boolean isInWaitingList(User user1) {
-        return false;
+    public User getFirstInWaitingList() {
+        return null;
     }
 
     public void returnBook() {
