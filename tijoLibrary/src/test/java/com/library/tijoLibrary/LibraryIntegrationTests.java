@@ -184,50 +184,120 @@ public class LibraryIntegrationTests {
     }
     @Test
     public void testEmailNotificationIntegration() {
-        // todo: rozwiń implementacje
+        User user = new User("test.user@example.com", "Test User");
+        Book borrowedBook = new Book("1234567890", "Integrated Book", "Author Z");
+
+        user.borrowBook(borrowedBook);
+
+        assertTrue(user.isEmailNotificationSent());
     }
 
     @Test
     public void testMessageNotificationIntegration() {
-        // todo: rozwiń implementacje
+        User user = new User("test.user@example.com", "Test User");
+        Book reservedBook = new Book("9876543210", "Reserved Book", "Author W");
+
+        user.reserveBook(reservedBook);
+
+        assertTrue(user.isMessageNotificationSent());
     }
     @Test
     public void testWaitingListIntegration() {
-        // todo: rozwiń implementacje
+        User user1 = new User("user1@example.com", "User 1");
+        User user2 = new User("user2@example.com", "User 2");
+        Book popularBook = new Book("111122223333", "Popular Book", "Author X");
+
+        popularBook.addToWaitingList(user1);
+        popularBook.addToWaitingList(user2);
+
+        assertEquals(user1, popularBook.getFirstInWaitingList());
+        assertTrue(user1.isNotificationReceived());
     }
 
     @Test
     public void testNotificationOnWaitingListIntegration() {
-        // todo: rozwiń implementacje
+        User user1 = new User("user1@example.com", "User 1");
+        User user2 = new User("user2@example.com", "User 2");
+        Book highDemandBook = new Book("333344445555", "High Demand Book", "Author Y");
+
+        highDemandBook.addToWaitingList(user1);
+        highDemandBook.addToWaitingList(user2);
+
+        highDemandBook.returnBook();
+
+        assertTrue(user1.isNotificationReceived());
+
     }
     @Test
     public void testRatingIntegration() {
-        // todo: rozwiń implementacje
+        User user = new User("test.user@example.com", "Test User");
+        Book ratedBook = new Book("444455556666", "Rated Book", "Author Z");
+
+        user.borrowBook(ratedBook);
+
+        user.rateBook(ratedBook, 4);
+
+        assertEquals(4, ratedBook.getAverageRating(), 0.01);
     }
 
     @Test
     public void testReviewsImpactIntegration() {
-        // todo: rozwiń implementacje
+        User user1 = new User("user1@example.com", "User 1");
+        User user2 = new User("user2@example.com", "User 2");
+        Book reviewedBook = new Book("777788889999", "Reviewed Book", "Author X");
+
+        user1.borrowBook(reviewedBook);
+        user1.addReview(reviewedBook, "Great book!", 5);
+
+        user2.borrowBook(reviewedBook);
+
+        assertTrue(user2.isBookSelectedBasedOnReview(reviewedBook));
     }
 
     @Test
     public void testUserActivityHistoryIntegration() {
-        // todo: rozwiń implementacje
+        User user = new User("test.user@example.com", "Test User");
+        Book borrowedBook = new Book("1234567890", "Integrated Book", "Author Z");
+
+        user.borrowBook(borrowedBook);
+
+        assertTrue(user.isBookInActivityHistory(borrowedBook));
     }
 
     @Test
     public void testUserActivityMetricsIntegration() {
-        // todo: rozwiń implementacje
+        User user = new User("test.user@example.com", "Test User");
+        Book borrowedBook1 = new Book("111122223333", "Book 1", "Author X");
+        Book borrowedBook2 = new Book("444455556666", "Book 2", "Author Y");
+
+        user.borrowBook(borrowedBook1);
+        user.borrowBook(borrowedBook2);
+
+        assertEquals(2, user.getNumberOfBooksBorrowed());
     }
 
     @Test
     public void testReturnReminderIntegration() {
-        // todo: rozwiń implementacje
+        User user = new User("test.user@example.com", "Test User");
+        Book borrowedBook = new Book("777788889999", "Reminder Book", "Author W");
+
+        user.borrowBook(borrowedBook);
+
+        simulatePassageOfTime(14);
+
+        assertTrue(user.isReturnReminderSent());
     }
 
     @Test
     public void testBookCategorizationIntegration() {
-        // todo: rozwiń implementacje
+        Book categorizedBook = new Book("888899990000", "Categorized Book", "Author Z");
+        Category category = new Category("Thriller");
+
+        Library.addCategory(category);
+
+        categorizedBook.addCategory(category);
+
+        assertTrue(category.containsBook(categorizedBook));
     }
 
     @Test
