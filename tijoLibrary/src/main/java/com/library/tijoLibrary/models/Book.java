@@ -70,4 +70,7 @@ public class Book {
     public int getAverageRating() {
         return 0;
     }
+
+    public void addCategory(Category category) {
+    }
 }
