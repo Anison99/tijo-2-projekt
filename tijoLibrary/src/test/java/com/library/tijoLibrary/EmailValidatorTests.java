@@ -22,4 +22,23 @@ public class EmailValidatorTests {
     public void testInvalidEmptyEmail() {
         assertFalse(validator.isValid(""));
     }
+
+    // ----------------------- DODANE TESTY --------------------
+
+    @Test
+    public void testEmailWithoutAtSymbol() {
+        assertFalse(validator.isValid("emailWithoutAtSymbol.com"));
+    }
+
+    @Test
+    public void testEmailWithDifferentDomains() {
+        assertTrue(validator.isValid("test@example.com"));
+        assertTrue(validator.isValid("test@example.org"));
+        assertTrue(validator.isValid("test@example.net"));
+    }
+
+    @Test
+    public void testEmailWithSpecialCharacters() {
+        assertTrue(validator.isValid("test.email+spam-filter@example.com"));
+    }
 }
