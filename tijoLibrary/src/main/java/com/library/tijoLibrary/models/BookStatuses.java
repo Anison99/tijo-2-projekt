@@ -8,6 +8,7 @@ public class BookStatuses {
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     private Long id;
 
+<<<<<<< HEAD
     @ManyToOne
     @JoinColumn(name = "book_id", nullable = false)
     private Book book;
@@ -21,6 +22,16 @@ public class BookStatuses {
 
     @Column(name = "isAvailable",nullable = false)
     private boolean isAvailable;
+=======
+    @Column(name = "user_id", nullable = false)
+    private Long userId;
+
+    @Column(name = "book_id", nullable = false)
+    private Long bookId;
+
+    @Column(name = "status", nullable = false)
+    private Boolean status;
+>>>>>>> origin/develop
 
     public Long getId() {
         return id;
@@ -30,6 +41,7 @@ public class BookStatuses {
         this.id = id;
     }
 
+<<<<<<< HEAD
     public Book getBook() {
         return book;
     }
@@ -60,5 +72,29 @@ public class BookStatuses {
 
     public void setUser(User user) {
         this.user = user;
+=======
+    public Long getUserId() {
+        return userId;
+    }
+
+    public void setUserId(Long userId) {
+        this.userId = userId;
+    }
+
+    public Long getBookId() {
+        return bookId;
+    }
+
+    public void setBookId(Long bookId) {
+        this.bookId = bookId;
+    }
+
+    public Boolean getStatus() {
+        return status;
+    }
+
+    public void setStatus(Boolean status) {
+        this.status = status;
+>>>>>>> origin/develop
     }
 }
