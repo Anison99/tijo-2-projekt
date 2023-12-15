@@ -1,0 +1,116 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <title>Oceny Książek</title>
+    <link href="https://maxcdn.bootstrapcdn.com/bootstrap/4.5.2/css/bootstrap.min.css" rel="stylesheet">
+    <script src="https://ajax.googleapis.com/ajax/libs/jquery/3.5.1/jquery.min.js"></script>
+</head>
+<body>
+<object type="text/html" data="navbar.html" width="100%" height="50px"></object>
+
+<div class="container mt-4">
+    <h1>Oceny Książek</h1>
+
+    <!-- Formularz dodawania oceny i recenzji -->
+    <div class="card my-3">
+        <div class="card-body">
+            <h4>Dodaj ocenę i recenzję</h4>
+            <form id="rating-form">
+                <div class="form-group">
+                    <label for="book-select">Wybierz książkę:</label>
+                    <select id="book-select" class="form-control" required>
+                        <!-- Opcje książek zostaną tutaj dodane -->
+                    </select>
+                </div>
+                <div class="form-group">
+                    <label for="rating">Ocena (1-10):</label>
+                    <input type="number" id="rating" class="form-control" min="1" max="10" required>
+                </div>
+                <div class="form-group">
+                    <label for="review">Recenzja:</label>
+                    <textarea id="review" class="form-control" required></textarea>
+                </div>
+                <button type="submit" class="btn btn-primary">Dodaj</button>
+            </form>
+        </div>
+    </div>
+
+    <!-- Lista dodanych ocen i recenzji -->
+    <div id="ratings-list">
+        <h4>Twoje oceny i recenzje</h4>
+        <!-- Lista ocen i recenzji będzie tutaj dodana -->
+    </div>
+</div>
+
+<script>
+$(document).ready(function() {
+    // Ładowanie listy książek
+    function loadBooks() {
+        $.ajax({
+            url: '/api/books', // Endpoint do pobierania listy książek
+            type: 'GET',
+            success: function(books) {
+                books.forEach(function(book) {
+                    $('#book-select').append(new Option(book.title, book.id));
+                });
+            },
+            error: function() {
+                alert("Błąd podczas ładowania listy książek.");
+            }
+        });
+    }
+
+    // Dodawanie oceny
+    $('#rating-form').submit(function(e) {
+        e.preventDefault();
+        var ratingData = {
+            book_id: $('#book-select').val(),
+            rating: $('#rating').val(),
+            recension: $('#review').val() // Używam 'recension' zgodnie z nazwą w bazie danych
+        };
+
+        $.ajax({
+            url: '/api/ratings/add', // Endpoint do dodawania oceny
+            type: 'POST',
+            contentType: 'application/json',
+            data: JSON.stringify(ratingData),
+            success: function() {
+                alert("Ocena dodana pomyślnie.");
+                loadRatings(); // Ponowne załadowanie listy ocen
+            },
+            error: function() {
+                alert("Błąd podczas dodawania oceny.");
+            }
+        });
+    });
+
+    // Ładowanie listy ocen i recenzji
+    function loadRatings() {
+        $.ajax({
+            url: '/api/ratings', // Endpoint do pobierania ocen
+            type: 'GET',
+            success: function(ratings) {
+                var ratingsList = $('#ratings-list');
+                ratingsList.empty(); // Czyszczenie istniejącej listy
+                ratings.forEach(function(rating) {
+                    ratingsList.append('<div><b>' + rating.book_title + '</b>: ' + rating.rating + '/10 <br>Recenzja: ' + rating.recension + '</div>'); // Używam 'recension'
+                });
+            },
+            error: function() {
+                alert("Błąd podczas ładowania ocen.");
+            }
+        });
+    }
+
+    // Inicjalizacja
+    loadBooks();
+    loadRatings();
+});
+</script>
+
+
+<script src="https://cdnjs.cloudflare.com/ajax/libs/popper.js/1.16.0/umd/popper.min.js"></script>
+<script src="https://maxcdn.bootstrapcdn.com/bootstrap/4.5.2/js/bootstrap.min.js"></script>
+</body>
+</html>
