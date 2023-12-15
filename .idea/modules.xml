@@ -1,0 +1,9 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<project version="4">
+  <component name="ProjectModuleManager">
+    <modules>
+      <module fileurl="file://$PROJECT_DIR$/.idea/tijo-2-projekt.iml" filepath="$PROJECT_DIR$/.idea/tijo-2-projekt.iml" />
+      <module fileurl="file://$PROJECT_DIR$/tijoLibrary/tijoLibrary.iml" filepath="$PROJECT_DIR$/tijoLibrary/tijoLibrary.iml" />
+    </modules>
+  </component>
+</project>

@@ -55,9 +55,9 @@ CREATE TABLE Rating (
 
 CREATE TABLE Category (
     id BIGINT AUTO_INCREMENT PRIMARY KEY,
-    category_name VARCHAR(255) NOT NULL
+    categoryName VARCHAR(255) NOT NULL
 );
-INSERT INTO Category (category_name) VALUES
+INSERT INTO Category (categoryName) VALUES
 ('Thriller'),
 ('Komedia'),
 ('Romans'),

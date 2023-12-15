@@ -81,5 +81,4 @@ public class BookStatuses {
         this.status = status;
     }
 
-    // ... pozostałe metody
 }

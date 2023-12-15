@@ -11,8 +11,8 @@ public class Category {
     private Long id;
 
 
-    @Column(name = "category_name", nullable = false)
-    private String category_name;
+    @Column(name = "categoryName", nullable = false)
+    private String categoryName;
 
     public Long getId() {
         return id;
@@ -23,10 +23,10 @@ public class Category {
     }
 
     public String getCategory_name() {
-        return category_name;
+        return categoryName;
     }
 
     public void setCategory_name(String category_name) {
-        this.category_name = category_name;
+        this.categoryName = categoryName;
     }
 }

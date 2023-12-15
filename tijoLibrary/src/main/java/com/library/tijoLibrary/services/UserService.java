@@ -14,7 +14,7 @@ import javax.persistence.EntityNotFoundException;
 import java.util.Optional;
 
 @Service
-public class UserService implements UserDetailsService {
+public class UserService{
     @Autowired
     private UserRepository userRepository;
 
@@ -24,9 +24,8 @@ public class UserService implements UserDetailsService {
     }
 
     // Ładowanie użytkownika po nazwie użytkownika
-    @Override
-    public UserDetails loadUserByUsername(String username) throws UsernameNotFoundException {
-        return (UserDetails) userRepository.findByUsername(username)
+    public User loadUserByUsername(String username) throws UsernameNotFoundException {
+        return userRepository.findByUsername(username)
                 .orElseThrow(() -> new UsernameNotFoundException("User not found with username: " + username));
     }
 
@@ -41,7 +40,7 @@ public class UserService implements UserDetailsService {
                 && username.length() > 8
                 && password != null
                 && password != ""
-                && password.length() >12
+                && password.length() >8
                 && passwordValidator.passwordValidation(password) != false
         )
         {

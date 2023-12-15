@@ -60,8 +60,8 @@ public class LibraryUnitTests {
     //########################################################################################################################
     @Test
     void testRegisterUser() {
-        String username = "newUser";
-        String password = "password1";
+        String username = "newUser1234";
+        String password = "password1123456";
 
         when(userRepository.findByUsername(username)).thenReturn(Optional.empty());
 
@@ -80,7 +80,7 @@ public class LibraryUnitTests {
     @Test
     void testRegisterUserWithEmptyUsername() {
         String username = "";
-        String password = "password1";
+        String password = "password12345";
 
         when(userRepository.findByUsername(username)).thenReturn(Optional.empty());
 
@@ -97,7 +97,7 @@ public class LibraryUnitTests {
     @Test
     void testRegisterUserWithNullUsername() {
         String username = null;
-        String password = "password1";
+        String password = "password12345";
 
         when(userRepository.findByUsername(username)).thenReturn(Optional.empty());
 
@@ -114,7 +114,7 @@ public class LibraryUnitTests {
     @Test
     void testRegisterUserWithShortUsername() {
         String username = "1234567";
-        String password = "password1";
+        String password = "password12345";
 
         when(userRepository.findByUsername(username)).thenReturn(Optional.empty());
 
@@ -130,7 +130,7 @@ public class LibraryUnitTests {
     }
     @Test
     void testRegisterUserWithNullPassword() {
-        String username = "12345678";
+        String username = "newUser12345678";
         String password = null;
 
         when(userRepository.findByUsername(username)).thenReturn(Optional.empty());
@@ -147,7 +147,7 @@ public class LibraryUnitTests {
     }
     @Test
     void testRegisterUserWithEmptyPassword() {
-        String username = "12345678";
+        String username = "newUser12345678";
         String password = "";
 
         when(userRepository.findByUsername(username)).thenReturn(Optional.empty());
@@ -164,7 +164,7 @@ public class LibraryUnitTests {
     }
     @Test
     void testRegisterUserWithShortPassword() {
-        String username = "12345678";
+        String username = "newUser12345678";
         String password = "pswd1";
 
         when(userRepository.findByUsername(username)).thenReturn(Optional.empty());
@@ -181,7 +181,7 @@ public class LibraryUnitTests {
     }
     @Test
     void testRegisterUserWithPasswordThatDontIncludeNumber() {
-        String username = "12345678";
+        String username = "newUser12345678";
         String password = "password";
 
         when(userRepository.findByUsername(username)).thenReturn(Optional.empty());
@@ -198,7 +198,7 @@ public class LibraryUnitTests {
     }
     @Test
     void testRegisterUserWithPasswordThatDontIncludeCharacter() {
-        String username = "password";
+        String username = "newUser12345678";
         String password = "12345678";
 
         when(userRepository.findByUsername(username)).thenReturn(Optional.empty());
@@ -232,7 +232,7 @@ public class LibraryUnitTests {
     }
     @Test
     void testUserLoginWrongDetails() {
-        String username = "testUser";
+        String username = "newUser12345678";
         String password = "testPassword1";
         String wrongPassword = "testwrongPassword1";
 
@@ -250,7 +250,7 @@ public class LibraryUnitTests {
     @Test
     void testChangingUsername() {
         // Ustawienie danych testowych
-        String originalUsername = "testUser";
+        String originalUsername = "newUser12345678";
         String newPassword = "testPassword1";
         String newUsername = "changedUsername";
 
@@ -270,7 +270,7 @@ public class LibraryUnitTests {
     @Test
     void testChangingPassword() {
         // Ustawienie danych testowych
-        String originalUsername = "testUser";
+        String originalUsername = "newUser12345678";
         String oldPassword = "testPassword1";
         String newPassword = "password";
 
@@ -290,7 +290,7 @@ public class LibraryUnitTests {
 
     @Test
     void testAddingNewEmail(){
-        String username = "testUser";
+        String username = "newUser12345678";
         String newPassword = "testPassword1";
         String email = "newemail@email.com";
 
@@ -310,7 +310,7 @@ public class LibraryUnitTests {
     @Test
     void testChangingEmail() {
         // Ustawienie danych testowych
-        String originalUsername = "testUser";
+        String originalUsername = "newUser12345678";
         String newPassword = "testPassword1";
         String oldemail = "test@test.pl";
         String newemail = "test2@test2.pl";
@@ -517,5 +517,5 @@ public class LibraryUnitTests {
         verify(bookRepository).save(book);
     }
 
-    
+
 }
