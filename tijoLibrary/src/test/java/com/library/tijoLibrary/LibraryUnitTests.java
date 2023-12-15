@@ -451,7 +451,7 @@ public class LibraryUnitTests {
     public void testMarkBookAsReserved() {
         Long bookId = 1L;
         BookStatuses bookStatuses = new BookStatuses();
-        when(bookStatusesRepository.findByBookId(bookId)).thenReturn(Optional.of(bookStatuses));
+        when(bookStatusesRepository.findByBook_Id(bookId)).thenReturn(Optional.of(bookStatuses));
 
         bookStatusesService.markBookAsReserved(bookId);
 
@@ -464,7 +464,7 @@ public class LibraryUnitTests {
     public void testMarkBookAsUnavailable() {
         Long bookId = 1L;
         BookStatuses bookStatuses = new BookStatuses();
-        when(bookStatusesRepository.findByBookId(bookId)).thenReturn(Optional.of(bookStatuses));
+        when(bookStatusesRepository.findByBook_Id(bookId)).thenReturn(Optional.of(bookStatuses));
 
         bookStatusesService.markBookAsUnavailable(bookId);
 
@@ -477,7 +477,7 @@ public class LibraryUnitTests {
         Long bookId = 1L;
         BookStatuses bookStatuses = new BookStatuses();
         bookStatuses.setReserved(true);
-        when(bookStatusesRepository.findByBookId(bookId)).thenReturn(Optional.of(bookStatuses));
+        when(bookStatusesRepository.findByBook_Id(bookId)).thenReturn(Optional.of(bookStatuses));
 
         boolean isReserved = bookStatusesService.isBookReserved(bookId);
 
@@ -489,7 +489,7 @@ public class LibraryUnitTests {
         Long bookId = 1L;
         BookStatuses bookStatuses = new BookStatuses();
         bookStatuses.setAvailable(true);
-        when(bookStatusesRepository.findByBookId(bookId)).thenReturn(Optional.of(bookStatuses));
+        when(bookStatusesRepository.findByBook_Id(bookId)).thenReturn(Optional.of(bookStatuses));
 
         boolean isAvailable = bookStatusesService.isBookAvailable(bookId);
 

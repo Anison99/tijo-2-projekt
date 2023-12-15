@@ -63,7 +63,7 @@ public class BookStatusesService {
     }
 
     private BookStatuses getBookStatuses(Long bookId) {
-        return bookStatusesRepository.findByBookId(bookId)
+        return bookStatusesRepository.findByBook_Id(bookId)
                 .orElseThrow(() -> new EntityNotFoundException("BookStatuses for book ID " + bookId + " not found"));
     }
 }

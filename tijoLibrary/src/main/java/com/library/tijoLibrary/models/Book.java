@@ -1,9 +1,6 @@
 package com.library.tijoLibrary.models;
 
-import javax.persistence.Entity;
-import javax.persistence.GeneratedValue;
-import javax.persistence.GenerationType;
-import javax.persistence.Id;
+import javax.persistence.*;
 
 @Entity
 public class Book {
@@ -13,10 +10,9 @@ public class Book {
     private String title;
     private String author;
     private boolean isReserved;
-    private Long category_ID;
-
-
-
+    @ManyToOne
+    @JoinColumn(name = "category_id")
+    private Category category;
     public Book() {
     }
 
@@ -59,9 +55,11 @@ public class Book {
         return 0;
     }
 
-    public void setCategory_ID(Long id) {
+    public Category getCategory() {
+        return category;
     }
-    public Long getCategory_ID(){
-        return category_ID;
+
+    public void setCategory(Category category) {
+        this.category = category;
     }
 }

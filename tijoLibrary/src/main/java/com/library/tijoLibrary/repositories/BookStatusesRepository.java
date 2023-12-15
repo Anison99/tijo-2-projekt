@@ -11,7 +11,7 @@ import java.util.Optional;
 @Repository
 public interface BookStatusesRepository extends JpaRepository<BookStatuses, Long> {
 
-    Optional<BookStatuses> findByBookIdAndUserId(Long bookId, Long userId);
+    Optional<BookStatuses> findByBook_IdAndUser_Id(Long bookId, Long userId);
 
-    Optional<BookStatuses> findByBookId(Long bookId);
+    Optional<BookStatuses> findByBook_Id(Long bookId);
 }
