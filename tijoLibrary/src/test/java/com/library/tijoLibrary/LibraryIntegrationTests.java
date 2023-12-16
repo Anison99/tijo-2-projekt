@@ -1,419 +1,171 @@
-/*package com.library.tijoLibrary;
+package com.library.tijoLibrary;
 
 import com.library.tijoLibrary.models.Book;
 import com.library.tijoLibrary.models.Category;
-import com.library.tijoLibrary.models.Library;
-import com.library.tijoLibrary.models.Reservation;
 import com.library.tijoLibrary.models.User;
 import com.library.tijoLibrary.repositories.BookRepository;
-import com.library.tijoLibrary.repositories.ReservationRepository;
 import com.library.tijoLibrary.repositories.UserRepository;
+import com.library.tijoLibrary.services.BookService;
+import com.library.tijoLibrary.services.UserService;
 import org.junit.jupiter.api.Test;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.test.autoconfigure.orm.jpa.DataJpaTest;
 import org.springframework.boot.test.autoconfigure.orm.jpa.TestEntityManager;
+import org.springframework.boot.test.context.SpringBootTest;
+import org.springframework.security.core.userdetails.UserDetails;
 import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.dao.DataIntegrityViolationException;
 
+import javax.transaction.Transactional;
 import java.time.LocalDateTime;
 import java.util.List;
+import java.util.Optional;
 
 ;import static org.junit.jupiter.api.Assertions.*;
 
-@DataJpaTest
+@SpringBootTest
 public class LibraryIntegrationTests {
     @Autowired
-    private ReservationRepository reservationRepository;
-
-    @Autowired
-    private TestEntityManager entityManager;
-
-    @Autowired
-    private BookRepository bookRepository;
-
-    @Autowired
-    private PasswordEncoder passwordEncoder;
+    private UserService userService;
 
     @Autowired
     private UserRepository userRepository;
 
-    private void simulatePassageOfTime(int i) {
-    }
+    @Autowired
+    private BookService bookService;
+
+    @Autowired
+    private BookRepository bookRepository;
 
     @Test
-    public void testAddingBookToDatabase() {
-        Book bookToAdd = new Book("Example Title", "Example Author", "Example Isbn");
-        Book savedBook = bookRepository.save(bookToAdd);
-        assertTrue(bookRepository.findById(savedBook.getId()).isPresent());
-    }
-    @Test
-    public void testRemovingBookFromDatabase() {
-        Book bookToRemove = new Book("Example Title", "Example Author", "Example Isbn");
-        entityManager.persist(bookToRemove);
-        bookRepository.delete(bookToRemove);
-        assertFalse(bookRepository.findById(bookToRemove.getId()).isPresent());
-    }
+    void testWhenUserExists_thenShouldFindUser() {
+        String username = "newUser12345678";
+        String password = "testPassword1";
 
+        userService.registerUser(username, password);
+        User user = userService.loadUserByUsername("newUser12345678");
+
+        assertNotNull(user);
+        assertEquals("newUser12345678", user.getUsername());
+    }
     @Test
-    public void testUserRegistrationAndLoginWithDatabase() {
-        User user = new User("testuser");
-        user.setPassword(passwordEncoder.encode("testpassword"));
+    @Transactional
+    void testWhenDeleteUser_thenUserShouldBeRemoved() {
+        User user = new User();
+        user.setUsername("deleteTestUser");
+        user.setPassword("password");
+
         userRepository.save(user);
-        User savedUser = userRepository.findByUsername("testuser").orElse(null);
-        assertNotNull(savedUser);
-        assertTrue(passwordEncoder.matches("testpassword", savedUser.getPassword()));
+        userService.deleteUser(user.getId());
+
+        assertFalse(userRepository.findById(user.getId()).isPresent());
     }
 
     @Test
-    public void testLoanHistoryRetrieval() {
-        User user = new User("testuser");
+    @Transactional
+    void testWhenUpdateUsername_thenUsernameShouldBeUpdated() {
+        User user = new User();
+        user.setUsername("oldUsername");
+        user.setPassword("password");
+
+        userRepository.save(user);
+        userService.updateUserName("oldUsername", "newUsername");
+        Optional<User> updatedUser = userRepository.findByUsername("newUsername");
+
+        assertTrue(updatedUser.isPresent());
+        assertEquals("newUsername", updatedUser.get().getUsername());
+    }
+
+    @Test
+    @Transactional
+    void testWhenUpdateUserPassword_thenPasswordShouldBeUpdated() {
+        User user = new User();
+        user.setUsername("userForPasswordChange");
+        user.setPassword("oldPassword");
+
+        userRepository.save(user);
+        userService.updateUserPassword("userForPasswordChange", "newPassword");
+        Optional<User> updatedUser = userRepository.findByUsername("userForPasswordChange");
+
+        assertTrue(updatedUser.isPresent());
+        assertEquals("newPassword", updatedUser.get().getPassword());
+    }
+
+    @Test
+    @Transactional
+    void testWhenUpdateUserEmail_thenEmailShouldBeUpdated() {
+        User user = new User();
+        user.setUsername("userForEmailChange");
+        user.setPassword("password");
+        user.setEmail("oldEmail@example.com");
+
+        userRepository.save(user);
+        userService.updateUserEmail("userForEmailChange", "newEmail@example.com");
+        Optional<User> updatedUser = userRepository.findByUsername("userForEmailChange");
+
+        assertTrue(updatedUser.isPresent());
+        assertEquals("newEmail@example.com", updatedUser.get().getEmail());
+    }
+
+    @Test
+    @Transactional
+    void testWhenRegisterUser_thenUserShouldBeAdded() {
+        String username = "newUserRegistration";
+        String password = "password123456";
+
+        User registeredUser = userService.registerUser(username, password);
+
+        assertNotNull(registeredUser);
+        assertEquals(username, registeredUser.getUsername());
+        assertEquals(password, registeredUser.getPassword());
+    }
+
+    @Test
+    @Transactional
+    void testWhenGetUserById_thenShouldReturnUser() {
+        User user = new User();
+        user.setUsername("getUserByIdTest");
+        user.setPassword("password");
         userRepository.save(user);
 
-        Reservation reservation1 = new Reservation();
-        reservation1.setBookTitle("Book 1");
-        reservation1.setStartDate(LocalDateTime.now().minusDays(3));
-        reservation1.setEndDate(LocalDateTime.now().plusDays(4));
-        reservation1.setUser(user);
-        reservationRepository.save(reservation1);
+        User foundUser = userService.getUserById(user.getId());
 
-        Reservation reservation2 = new Reservation();
-        reservation2.setBookTitle("Book 2");
-        reservation2.setStartDate(LocalDateTime.now().minusDays(2));
-        reservation2.setEndDate(LocalDateTime.now().plusDays(5));
-        reservation2.setUser(user);
-        reservationRepository.save(reservation2);
-
-        List<Reservation> userReservations = reservationRepository.findByUser(user);
-
-        assertEquals(2, userReservations.size());
-        assertTrue(userReservations.contains(reservation1));
-        assertTrue(userReservations.contains(reservation2));
+        assertNotNull(foundUser);
+        assertEquals("getUserByIdTest", foundUser.getUsername());
     }
 
     @Test
-    public void testCheckingBookAvailabilityWithReservations() {
-        Book book = new Book("Book Title", "Book Author", "ISBN");
-        bookRepository.save(book);
+    @Transactional
+    void testWhenAddBook_thenBookShouldBeAdded() {
+        String author = "NewAuthor";
+        String title = "NewTitle";
 
-        Reservation reservation = new Reservation();
-        reservation.setBook(book);
-        reservation.setStartDate(LocalDateTime.now().minusDays(2));
-        reservation.setEndDate(LocalDateTime.now().plusDays(5));
-        reservationRepository.save(reservation);
-        boolean isBookAvailable = ReservationRepository.existsByBookAndEndDateAfter(book, LocalDateTime.now());
+        Book book = bookService.addBook(author, title);
 
-        assertFalse(isBookAvailable);
+        assertNotNull(book);
+        assertEquals(author, book.getAuthor());
+        assertEquals(title, book.getTitle());
     }
 
     @Test
-    public void testAccountRegistrationWithExistingEmail() {
-        User existingUser = new User("existinguser");
-        existingUser.setEmail("existing@example.com");
-        userRepository.save(existingUser);
+    void testWhenGetAllBooks_thenShouldReturnBooks() {
+        bookRepository.save(new Book("Author1", "Title1"));
+        bookRepository.save(new Book("Author2", "Title2"));
 
-        User newUser = new User("newuser");
-        newUser.setEmail("existing@example.com");
+        List<Book> books = bookService.getAllBooks();
 
-        assertThrows(DataIntegrityViolationException.class, () -> userRepository.save(newUser));
+        assertNotNull(books);
+        assertTrue(books.size() >= 2);
     }
 
     @Test
-    public void testReservingBookAlreadyReserved() {
-        Book book = new Book("Book Title", "Book Author", "ISBN");
-        bookRepository.save(book);
+    @Transactional
+    void whenDeleteBook_thenBookShouldBeRemoved() {
+        Book book = new Book("DeleteAuthor", "DeleteTitle");
 
-        Reservation reservation = new Reservation();
-        reservation.setBook(book);
-        reservation.setStartDate(LocalDateTime.now().minusDays(2));
-        reservation.setEndDate(LocalDateTime.now().plusDays(5));
+        book = bookRepository.save(book);
+        bookService.deleteBook(book.getId());
 
-        reservationRepository.save(reservation);
-
-        Reservation anotherReservation = new Reservation();
-        anotherReservation.setBook(book);
-        anotherReservation.setStartDate(LocalDateTime.now().plusDays(1));
-        anotherReservation.setEndDate(LocalDateTime.now().plusDays(6));
-
-        assertThrows(Exception.class, () -> reservationRepository.save(anotherReservation));
-    }
-    @Test
-    public void testExtendingReservationAtMaximumPeriod() {
-        Book book = new Book("Book Title", "Book Author", "ISBN");
-        bookRepository.save(book);
-
-        Reservation reservation = new Reservation();
-        reservation.setBook(book);
-        reservation.setStartDate(LocalDateTime.now());
-        reservation.setEndDate(LocalDateTime.now().plusDays(7));
-        reservationRepository.save(reservation);
-
-        int maximumExtensions = 3;
-        for (int i = 0; i < maximumExtensions; i++) {
-            reservation.extendReservation();
-        }
-
-        assertThrows(Exception.class, () -> reservation.extendReservation());
-    }
-
-    @Test
-    public void testCheckingLoanHistoryForMultipleUsers() {
-        // Dodanie kilku użytkowników do bazy danych
-        User user1 = new User("user1");
-        userRepository.save(user1);
-
-        User user2 = new User("user2");
-        userRepository.save(user2);
-
-        Book book = new Book("Book Title", "Book Author", "ISBN");
-        bookRepository.save(book);
-
-        Reservation reservation1 = new Reservation();
-        reservation1.setBook(book);
-        reservation1.setStartDate(LocalDateTime.now().minusDays(3));
-        reservation1.setEndDate(LocalDateTime.now().plusDays(4));
-        reservation1.setUser(user1);
-        reservationRepository.save(reservation1);
-
-        Reservation reservation2 = new Reservation();
-        reservation2.setBook(book);
-        reservation2.setStartDate(LocalDateTime.now().minusDays(2));
-        reservation2.setEndDate(LocalDateTime.now().plusDays(5));
-        reservation2.setUser(user2);
-        reservationRepository.save(reservation2);
-
-        List<Reservation> user1Reservations = reservationRepository.findByUser(user1);
-        List<Reservation> user2Reservations = reservationRepository.findByUser(user2);
-
-        assertEquals(1, user1Reservations.size());
-        assertEquals(1, user2Reservations.size());
-    }
-    @Test
-    public void testEmailNotificationIntegration() {
-        User user = new User("User");
-        Book borrowedBook = new Book("1234567890", "Integrated Book", "Author Z");
-
-        user.borrowBook(borrowedBook);
-
-        assertTrue(user.isEmailNotificationSent());
-    }
-
-    @Test
-    public void testMessageNotificationIntegration() {
-        User user = new User("User");
-        Book reservedBook = new Book("9876543210", "Reserved Book", "Author W");
-
-        user.reserveBook(reservedBook);
-
-        assertTrue(user.isMessageNotificationSent());
-    }
-    @Test
-    public void testWaitingListIntegration() {
-        User user1 = new User("User1");
-        User user2 = new User("User2");
-        Book popularBook = new Book("111122223333", "Popular Book", "Author X");
-
-        popularBook.addToWaitingList(user1);
-        popularBook.addToWaitingList(user2);
-
-        assertEquals(user1, popularBook.getFirstInWaitingList());
-        assertTrue(user1.isNotificationReceived());
-    }
-
-    @Test
-    public void testNotificationOnWaitingListIntegration() {
-        User user1 = new User("User1");
-        User user2 = new User("User2");
-        Book highDemandBook = new Book("333344445555", "High Demand Book", "Author Y");
-
-        highDemandBook.addToWaitingList(user1);
-        highDemandBook.addToWaitingList(user2);
-
-        highDemandBook.returnBook();
-
-        assertTrue(user1.isNotificationReceived());
-
-    }
-    @Test
-    public void testRatingIntegration() {
-        User user = new User("User");
-        Book ratedBook = new Book("444455556666", "Rated Book", "Author Z");
-
-        user.borrowBook(ratedBook);
-
-        user.rateBook(ratedBook, 4);
-
-        assertEquals(4, ratedBook.getAverageRating(), 0.01);
-    }
-
-    @Test
-    public void testReviewsImpactIntegration() {
-        User user1 = new User("User1");
-        User user2 = new User("User2");
-        Book reviewedBook = new Book("777788889999", "Reviewed Book", "Author X");
-
-        user1.borrowBook(reviewedBook);
-        user1.addReview(reviewedBook, "Great book!", 5);
-
-        user2.borrowBook(reviewedBook);
-
-        assertTrue(user2.isBookSelectedBasedOnReview(reviewedBook));
-    }
-
-    @Test
-    public void testUserActivityHistoryIntegration() {
-        User user = new User("User");
-        Book borrowedBook = new Book("1234567890", "Integrated Book", "Author Z");
-
-        user.borrowBook(borrowedBook);
-
-        assertTrue(user.isBookInActivityHistory(borrowedBook));
-    }
-
-    @Test
-    public void testUserActivityMetricsIntegration() {
-        User user = new User("tUser");
-        Book borrowedBook1 = new Book("111122223333", "Book 1", "Author X");
-        Book borrowedBook2 = new Book("444455556666", "Book 2", "Author Y");
-
-        user.borrowBook(borrowedBook1);
-        user.borrowBook(borrowedBook2);
-
-        assertEquals(2, user.getNumberOfBooksBorrowed());
-    }
-
-    @Test
-    public void testReturnReminderIntegration() {
-        User user = new User("User");
-        Book borrowedBook = new Book("777788889999", "Reminder Book", "Author W");
-
-        user.borrowBook(borrowedBook);
-
-        simulatePassageOfTime(14);
-
-        assertTrue(user.isReturnReminderSent());
-    }
-
-
-    @Test
-    public void testBookCategorizationIntegration() {
-        Book categorizedBook = new Book("888899990000", "Categorized Book", "Author Z");
-        Category category = new Category("Test Name");
-
-        Library.addCategory(category);
-
-        categorizedBook.addCategory(category);
-
-        assertTrue(category.containsBook(categorizedBook));
-    }
-
-    @Test
-    public void testBookRecommendationsIntegration() {
-        Book book1 = new Book("Book 1", "Author 1", "ISBN 1");
-        Book book2 = new Book("Book 2", "Author 2", "ISBN 2");
-        Book book3 = new Book("Book 3", "Author 3", "ISBN 3");
-
-        User user = new User("User");
-
-        user.borrowBook(book1);
-        user.borrowBook(book2);
-        user.borrowBook(book3);
-
-        List<Book> recommendedBooks = user.getRecommendedBooks();
-
-        assertFalse(recommendedBooks.isEmpty());
-        assertTrue(recommendedBooks.contains(book1));
-        assertTrue(recommendedBooks.contains(book2));
-        assertTrue(recommendedBooks.contains(book3));
-    }
-
-    @Test
-    public void testNotificationServiceIntegration() {
-        User user = new User("User");
-        Book book = new Book("Book Title", "Author", "ISBN");
-        book.addToWaitingList(user);
-        book.returnBook();
-
-        assertTrue(user.hasReceivedNotification());
-    }
-
-    @Test
-    public void testWaitingListServiceIntegration() {
-        User user1 = new User("User1");
-        User user2 = new User("User2");
-        Book popularBook = new Book("Popular Book", "Author", "ISBN");
-
-        popularBook.addToWaitingList(user1);
-        popularBook.addToWaitingList(user2);
-
-        assertTrue(popularBook.isInWaitingList(user1));
-        assertTrue(popularBook.isInWaitingList(user2));
-    }
-
-    @Test
-    public void testRatingServiceIntegration() {
-        User user = new User("User");
-        Book ratedBook = new Book("Rated Book", "Author", "ISBN");
-
-        user.borrowBook(ratedBook);
-        user.rateBook(ratedBook, 4);
-
-        assertEquals(4, ratedBook.getAverageRating(), 0.01);
-    }
-
-    @Test
-    public void testUserActivityServiceIntegration() {
-        User user = new User("User");
-        Book borrowedBook = new Book("Integrated Book", "Author", "ISBN");
-
-        user.borrowBook(borrowedBook);
-        assertTrue(user.isBookInActivityHistory(borrowedBook));
-    }
-    // --------------------------------------------
-    @Test
-    public void testAddingNewBookToCatalog() {
-        Book newBook = new Book("New Book", "New Author", "New ISBN");
-        bookService.addBook(newBook);
-        assertTrue(bookService.getBooks().contains(newBook));
-    }
-
-    @Test
-    public void testRemovingBookFromCatalog() {
-        Book bookToRemove = bookService.findBookByTitle("BookToRemove");
-        bookService.removeBook(bookToRemove);
-
-        assertFalse(bookService.getBooks().contains(bookToRemove));
-    }
-
-    @Test
-    public void testReservingBookProcess() {
-        Book availableBook = bookService.findAvailableBook("AvailableBook");
-        boolean isReserved = reservationService.reserveBookForUser(availableBook, currentUser);
-        assertTrue(isReserved);
-    }
-
-    @Test
-    public void testExtendingReservationProcess() {
-        User user = userService.login("username", "password");
-
-        List<Reservation> reservations = reservationService.getUserReservations(user);
-
-        boolean isExtended = reservationService.extendReservation(reservations.get(0));
-
-        assertTrue(isExtended);
-    }
-
-    @Test
-    public void testCheckingLoanHistory() {
-        List<Loan> loanHistory = userService.getLoanHistory(currentUser);
-        assertEquals(expectedLoanHistorySize, loanHistory.size());
-    }
-
-    @Test
-    public void testInvalidLoginAttempt() {
-        String invalidUsername = "InvalidUser";
-        String password = "CorrectPassword";
-        User loggedInUser = userService.login(invalidUsername, password);
-        assertNull(loggedInUser);
+        assertFalse(bookRepository.existsById(book.getId()));
     }
 }
-*/

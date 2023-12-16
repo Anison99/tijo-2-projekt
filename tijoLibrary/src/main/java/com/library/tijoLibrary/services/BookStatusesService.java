@@ -2,14 +2,6 @@ package com.library.tijoLibrary.services;
 
 
 import com.library.tijoLibrary.models.Book;
-<<<<<<< HEAD
-import org.springframework.stereotype.Service;
-
-@Service
-public class BookStatusesService {
-    public Object checkBookStatus(Book bookId, Long userId) {
-        return null;
-=======
 import com.library.tijoLibrary.models.BookStatuses;
 import com.library.tijoLibrary.repositories.BookRepository;
 import com.library.tijoLibrary.repositories.BookStatusesRepository;
@@ -73,6 +65,5 @@ public class BookStatusesService {
     private BookStatuses getBookStatuses(Long bookId) {
         return bookStatusesRepository.findByBook_Id(bookId)
                 .orElseThrow(() -> new EntityNotFoundException("BookStatuses for book ID " + bookId + " not found"));
->>>>>>> origin/develop
     }
 }
