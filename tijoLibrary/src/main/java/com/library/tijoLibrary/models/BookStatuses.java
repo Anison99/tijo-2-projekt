@@ -13,6 +13,33 @@ public class BookStatuses {
     private Book book;
 
     @ManyToOne
+<<<<<<< HEAD
+    @JoinColumn(name = "user_id", nullable = false)
+    private User user;
+
+
+    @Column(name = "isReserved", nullable = false)
+    private boolean isReserved;
+
+    @Column(name = "isAvailable",nullable = false)
+    private boolean isAvailable;
+
+    public Long getId() {
+        return id;
+    }
+
+    public void setId(Long id) {
+        this.id = id;
+    }
+
+    public Book getBook() {
+        return book;
+    }
+
+    public void setBook(Book book) {
+        this.book = book;
+    }
+=======
     @JoinColumn(name = "user_id")
     private User user;
 
@@ -24,6 +51,7 @@ public class BookStatuses {
 
     @Column(name = "status", nullable = false)
     private Boolean status;
+>>>>>>> origin/develop
 
     public boolean isReserved() {
         return isReserved;
@@ -41,6 +69,8 @@ public class BookStatuses {
         isAvailable = available;
     }
 
+<<<<<<< HEAD
+=======
     public Long getId() {
         return id;
     }
@@ -57,6 +87,7 @@ public class BookStatuses {
         this.book = book;
     }
 
+>>>>>>> origin/develop
     public User getUser() {
         return user;
     }
@@ -64,6 +95,8 @@ public class BookStatuses {
     public void setUser(User user) {
         this.user = user;
     }
+<<<<<<< HEAD
+=======
 
     public Long getBookId() {
         return book != null ? book.getId() : null;
@@ -82,4 +115,5 @@ public class BookStatuses {
     }
 
     // ... pozostałe metody
+>>>>>>> origin/develop
 }

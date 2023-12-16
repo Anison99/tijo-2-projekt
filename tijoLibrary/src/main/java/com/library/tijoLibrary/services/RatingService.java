@@ -5,6 +5,16 @@ import com.library.tijoLibrary.models.Rating;
 import com.library.tijoLibrary.models.User;
 import org.springframework.stereotype.Service;
 
+<<<<<<< HEAD
+@Service
+public class RatingService {
+    public Rating getUserRatingForBook(User user, Book book) {
+        return null;
+    }
+
+    public void saveRating(Rating rating) {
+        //todo: implementacja metody
+=======
 import java.util.List;
 
 @Service
@@ -47,5 +57,6 @@ public class RatingService {
     // Pobranie recenzji dla książki
     public List<Rating> getReviewsForBook(Long bookId) {
         return null;
+>>>>>>> origin/develop
     }
 }

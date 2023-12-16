@@ -1,5 +1,9 @@
 package com.library.tijoLibrary.services;
 
+<<<<<<< HEAD
+public class CategoryService {
+}
+=======
 import com.library.tijoLibrary.models.Book;
 import com.library.tijoLibrary.models.Category;
 import com.library.tijoLibrary.repositories.BookRepository;
@@ -42,3 +46,4 @@ public class CategoryService {
     }
 
 }
+>>>>>>> origin/develop
