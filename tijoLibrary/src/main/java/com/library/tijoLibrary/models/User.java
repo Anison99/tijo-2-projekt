@@ -1,20 +1,21 @@
 package com.library.tijoLibrary.models;
 
-import javax.persistence.Entity;
-import javax.persistence.GeneratedValue;
-import javax.persistence.GenerationType;
-import javax.persistence.Id;
+import javax.persistence.*;
 
 @Entity
 public class User {
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     private Long id;
+
+    @Column(name = "username", nullable = false)
     private String username;
+
+    @Column(name = "password", nullable = false)
     private String password;
 
-    public User(String username) {
-    }
+    @Column(name = "email")
+    private String email;
 
     public Long getId() {
         return id;
@@ -40,50 +41,11 @@ public class User {
         this.password = password;
     }
 
-    public User orElse(Object o) {
-        return null;
+    public String getEmail() {
+        return email;
     }
 
-    public void setEmail(String mail) {
-    }
-
-    public void borrowBook(Book borrowedBook) {
-    }
-
-    public boolean isEmailNotificationSent() {
-        return false;
-    }
-
-    public void reserveBook(Book reservedBook) {
-    }
-
-    public boolean isMessageNotificationSent() {
-        return false;
-    }
-
-    public boolean isNotificationReceived() {
-        return false;
-    }
-
-    public void rateBook(Book ratedBook, int i) {
-    }
-
-    public void addReview(Book reviewedBook, String s, int i) {
-    }
-
-    public boolean isBookSelectedBasedOnReview(Book reviewedBook) {
-        return false;
-    }
-
-    public boolean isBookInActivityHistory(Book borrowedBook) {
-        return false;
-    }
-
-    public int getNumberOfBooksBorrowed() {
-        return 0;
-    }
-
-    public boolean isReturnReminderSent() {
-        return false;
+    public void setEmail(String email) {
+        this.email = email;
     }
 }

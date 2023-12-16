@@ -23,11 +23,19 @@ public class Rating {
     @Column(name = "recension")
     private String recension;
 
+<<<<<<< HEAD
     public Long getRating_id() {
         return id;
     }
 
     public void setRating_id(Long id) {
+=======
+    public Long getId() {
+        return id;
+    }
+
+    public void setId(Long id) {
+>>>>>>> origin/develop
         this.id = id;
     }
 
@@ -54,6 +62,7 @@ public class Rating {
     public void setRating(int rating) {
         this.rating = rating;
     }
+<<<<<<< HEAD
 
     public String getRecension() {
         return recension;
@@ -62,5 +71,7 @@ public class Rating {
     public void setRecension(String recension) {
         this.recension = recension;
     }
+=======
+>>>>>>> origin/develop
 }
 

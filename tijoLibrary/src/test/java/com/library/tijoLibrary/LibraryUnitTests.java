@@ -1,321 +1,521 @@
 package com.library.tijoLibrary;
 
-import com.library.tijoLibrary.models.Book;
-import com.library.tijoLibrary.models.Reservation;
-import com.library.tijoLibrary.models.User;
-import com.library.tijoLibrary.services.BookService;
-import com.library.tijoLibrary.services.ReservationService;
-import com.library.tijoLibrary.services.UserService;
-import org.junit.jupiter.api.Assertions;
+import com.library.tijoLibrary.models.*;
+import com.library.tijoLibrary.repositories.BookRepository;
+import com.library.tijoLibrary.repositories.BookStatusesRepository;
+import com.library.tijoLibrary.repositories.CategoryRepository;
+import com.library.tijoLibrary.repositories.UserRepository;
+import com.library.tijoLibrary.services.*;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
-
-import java.time.LocalDate;
-import java.util.List;
+import org.mockito.MockitoAnnotations;
 
 import static org.junit.jupiter.api.Assertions.*;
+import static org.mockito.Mockito.*;
+
+import org.mockito.InjectMocks;
+import org.mockito.Mock;
+
+import javax.persistence.EntityNotFoundException;
+import java.util.*;
+
+import static org.mockito.Mockito.when;
 
 public class LibraryUnitTests {
 
+    @InjectMocks
+    UserService userService;
+
+    @Mock
+    UserRepository userRepository;
+
+    @Mock
+    private BookRepository bookRepository;
+
+    @InjectMocks
     private BookService bookService;
-    private UserService userService;
-    private ReservationService reservationService;
+
+    @Mock
+    private BookStatusesRepository bookStatusesRepository;
+
+    @InjectMocks
+    private BookStatusesService bookStatusesService;
+    @Mock
+    private CategoryRepository categoryRepository;
+
+    @InjectMocks
+    private CategoryService categoryService;
+
 
     @BeforeEach
     public void setUp() {
-        bookService = new BookService();
-        userService = new UserService();
-        reservationService = new ReservationService();
+        MockitoAnnotations.openMocks(this);
     }
 
-    private void simulatePassageOfTime(int days) {
-       
-        LocalDate currentDate = LocalDate.now();
-        LocalDate simulatedDate = currentDate.plusDays(days);
-        SystemDate.setCurrentDate(simulatedDate);
-    }
-
+    //########################################################################################################################
+    //########################################################################################################################
+    //###########################################//test użytkownika ##########################################################
+    //########################################################################################################################
+    //########################################################################################################################
+    //########################################################################################################################
     @Test
-    public void testAddingBook() {
-        Book newBook = new Book("Title", "Author", "ISBN");
-        bookService.addBook(newBook);
-        assertTrue(bookService.getBooks().contains(newBook));
-    }
-
-    @Test
-    public void testBookReservation() {
-        User user = new User("username");
-        Book book = new Book("Title", "Author", "ISBN");
-        bookService.addBook(book);
-        reservationService.reserveBook(book, user);
-        assertEquals("reserved", book.getStatus());
-        assertEquals(user, book.getReservedBy());
-    }
-
-    @Test
-    public void testRemovingBook() {
-        Book book = new Book("Title", "Author", "ISBN");
-        bookService.addBook(book);
-        bookService.removeBook(book);
-        assertFalse(bookService.getBooks().contains(book));
-    }
-
-    @Test
-    public void testExtendingReservation() {
-        Book book = new Book("Title", "Author", "ISBN");
-        bookService.addBook(book);
-        User user = new User("username");
-        reservationService.reserveBook(book, user);
-
-        reservationService.extendReservation(book, user, 7);
-
-        short expectedExtendedDate = 0;
-        assertEquals(expectedExtendedDate, reservationService.getReturnDate(book, user));
-
-        // todo: Zdefiniuj oczekiwaną datę przedłużenia książki na podstawie implementacji. Może to być bieżąca data oddania + 7 dni
-        // todo: Data przedłużenia nie może być przekroczona
-    }
-
-    @Test
-    public void testCheckingBookStatus() {
-        Book availableBook = new Book("Available Title", "Author", "ISBN");
-        bookService.addBook(availableBook);
-        Book reservedBook = new Book("Reserved Title", "Author", "ISBN");
-        bookService.addBook(reservedBook);
-        User user = new User("username");
-        reservationService.reserveBook(reservedBook, user);
-
-        assertTrue(bookService.checkAvailability(availableBook));
-        assertFalse(bookService.checkAvailability(reservedBook));
-    }
-
-    @Test
-    public void testLoanHistory() {
-        User user = new User("username");
-        Book book = new Book("Title", "Author", "ISBN");
-        bookService.addBook(book);
-        reservationService.reserveBook(book, user);
-
-        List<Reservation> loanHistory = reservationService.getLoanHistory(user);
-
-        assertTrue(loanHistory.stream().anyMatch(reservation ->
-                reservation.getBook().equals(book) && reservation.getUser().equals(user)));
-    }
-
-    @Test
-    public void testAccountRegistrationAndLogin() {
+    void testRegisterUser() {
         String username = "newUser";
+        String password = "password1";
+
+        when(userRepository.findByUsername(username)).thenReturn(Optional.empty());
+
+        User newUser = new User();
+        newUser.setUsername(username);
+        newUser.setPassword(password);
+
+        when(userRepository.save(any(User.class))).thenReturn(newUser);
+
+        User result = userService.registerUser(username, password);
+
+        assertNotNull(result);
+        assertEquals(username, result.getUsername());
+        assertEquals(password, result.getPassword());
+    }
+    @Test
+    void testRegisterUserWithEmptyUsername() {
+        String username = "";
+        String password = "password1";
+
+        when(userRepository.findByUsername(username)).thenReturn(Optional.empty());
+
+        User newUser = new User();
+        newUser.setUsername(username);
+        newUser.setPassword(password);
+
+        when(userRepository.save(any(User.class))).thenReturn(newUser);
+
+        User result = userService.registerUser(username, password);
+
+        assertNull(result);
+    }
+    @Test
+    void testRegisterUserWithNullUsername() {
+        String username = null;
+        String password = "password1";
+
+        when(userRepository.findByUsername(username)).thenReturn(Optional.empty());
+
+        User newUser = new User();
+        newUser.setUsername(username);
+        newUser.setPassword(password);
+
+        when(userRepository.save(any(User.class))).thenReturn(newUser);
+
+        User result = userService.registerUser(username, password);
+
+        assertNull(result);
+    }
+    @Test
+    void testRegisterUserWithShortUsername() {
+        String username = "1234567";
+        String password = "password1";
+
+        when(userRepository.findByUsername(username)).thenReturn(Optional.empty());
+
+        User newUser = new User();
+        newUser.setUsername(username);
+        newUser.setPassword(password);
+
+        when(userRepository.save(any(User.class))).thenReturn(newUser);
+
+        User result = userService.registerUser(username, password);
+
+        assertNull(result);
+    }
+    @Test
+    void testRegisterUserWithNullPassword() {
+        String username = "12345678";
+        String password = null;
+
+        when(userRepository.findByUsername(username)).thenReturn(Optional.empty());
+
+        User newUser = new User();
+        newUser.setUsername(username);
+        newUser.setPassword(password);
+
+        when(userRepository.save(any(User.class))).thenReturn(newUser);
+
+        User result = userService.registerUser(username, password);
+
+        assertNull(result);
+    }
+    @Test
+    void testRegisterUserWithEmptyPassword() {
+        String username = "12345678";
+        String password = "";
+
+        when(userRepository.findByUsername(username)).thenReturn(Optional.empty());
+
+        User newUser = new User();
+        newUser.setUsername(username);
+        newUser.setPassword(password);
+
+        when(userRepository.save(any(User.class))).thenReturn(newUser);
+
+        User result = userService.registerUser(username, password);
+
+        assertNull(result);
+    }
+    @Test
+    void testRegisterUserWithShortPassword() {
+        String username = "12345678";
+        String password = "pswd1";
+
+        when(userRepository.findByUsername(username)).thenReturn(Optional.empty());
+
+        User newUser = new User();
+        newUser.setUsername(username);
+        newUser.setPassword(password);
+
+        when(userRepository.save(any(User.class))).thenReturn(newUser);
+
+        User result = userService.registerUser(username, password);
+
+        assertNull(result);
+    }
+    @Test
+    void testRegisterUserWithPasswordThatDontIncludeNumber() {
+        String username = "12345678";
         String password = "password";
 
-        userService.registerUser(username, password);
+        when(userRepository.findByUsername(username)).thenReturn(Optional.empty());
 
-        assertTrue(userService.isUserRegistered(username));
-        User loggedInUser = userService.login(username, password);
+        User newUser = new User();
+        newUser.setUsername(username);
+        newUser.setPassword(password);
 
-        Assertions.assertNotNull(loggedInUser);
-        assertEquals(username, loggedInUser.getUsername());
+        when(userRepository.save(any(User.class))).thenReturn(newUser);
+
+        User result = userService.registerUser(username, password);
+
+        assertNull(result);
     }
-
     @Test
-    public void testUserLoginDetails() {
+    void testRegisterUserWithPasswordThatDontIncludeCharacter() {
+        String username = "password";
+        String password = "12345678";
+
+        when(userRepository.findByUsername(username)).thenReturn(Optional.empty());
+
+        User newUser = new User();
+        newUser.setUsername(username);
+        newUser.setPassword(password);
+
+        when(userRepository.save(any(User.class))).thenReturn(newUser);
+
+        User result = userService.registerUser(username, password);
+
+        assertNull(result);
+    }
+    @Test
+    void testGetUserByLoginDetails() {
         String username = "existingUser";
         String password = "password123";
 
-        userService.addUser(username, password);
+        User existingUser = new User();
+        existingUser.setUsername(username);
+        existingUser.setPassword(password);
 
-        User loggedInUser = userService.login(username, password);
-        Assertions.assertNotNull(loggedInUser);
-        assertEquals(username, loggedInUser.getUsername());
+        when(userRepository.findByUsernameAndPassword(username, password)).thenReturn(Optional.of(existingUser));
+
+        Optional<User> result = userService.getUserByLoginDetails(username, password);
+
+        assertTrue(result.isPresent());
+        assertEquals(username, result.get().getUsername());
+        assertEquals(password, result.get().getPassword());
+    }
+    @Test
+    void testUserLoginWrongDetails() {
+        String username = "testUser";
+        String password = "testPassword1";
+        String wrongPassword = "testwrongPassword1";
+
+        User user = new User();
+        user.setUsername(username);
+        user.setPassword(password);
+
+        when(userRepository.findByUsernameAndPassword(username, wrongPassword)).thenReturn(Optional.of(user));
+
+        Optional<User> result = userService.getUserByLoginDetails(username, password);
+
+        assertFalse(result.isPresent());
     }
 
     @Test
-    public void testChangingReservationStatus() {
-        User user = new User("username");
-        Book book = new Book("Title", "Author", "ISBN");
-        bookService.addBook(book);
+    void testChangingUsername() {
+        // Ustawienie danych testowych
+        String originalUsername = "testUser";
+        String newPassword = "testPassword1";
+        String newUsername = "changedUsername";
 
-        reservationService.reserveBook(book, user);
-        assertEquals("reserved", book.getStatus());
-        reservationService.borrowBook(book, user);
-        assertEquals("borrowed", book.getStatus());
-        reservationService.returnBook(book, user);
-        assertEquals("reserved", book.getStatus());
+        User user = new User();
+        user.setUsername(originalUsername);
+        user.setPassword(newPassword);
+
+        // Konfiguracja Mockito
+        when(userRepository.findByUsername(originalUsername)).thenReturn(Optional.of(user));
+        when(userRepository.save(any(User.class))).thenAnswer(i -> i.getArguments()[0]);
+
+        User updatedUser = userService.updateUserName(originalUsername, newUsername);
+
+        assertNotNull(updatedUser);
+        assertEquals(newUsername, updatedUser.getUsername());
     }
-
-    // ------------------------------------------------------
     @Test
-    public void testEmailNotificationOnBookDueDate() {
-         User user = new User("user");
-         Book book = new Book("1234567890", "Test Book", "Author");
-         user.borrowBook(book);
+    void testChangingPassword() {
+        // Ustawienie danych testowych
+        String originalUsername = "testUser";
+        String oldPassword = "testPassword1";
+        String newPassword = "password";
 
-         simulatePassageOfTime(5);
-         assertTrue(user.hasReceivedEmailNotification());
-         String expectedNotification = "Przypominamy o zbliżającym się terminie zwrotu książki: Test Book.";
-         assertEquals(expectedNotification, user.getLastEmailNotification());
-    }
+        User user = new User();
+        user.setUsername(originalUsername);
+        user.setPassword(newPassword);
 
-    @Test
-    public void testMessageNotificationOnAccountChanges() {
-        User user = new User("user");
-        user.updateName("Anna Kowalska");
+        // Konfiguracja Mockito
+        when(userRepository.findByUsername(originalUsername)).thenReturn(Optional.of(user));
+        when(userRepository.save(any(User.class))).thenAnswer(i -> i.getArguments()[0]);
 
-        assertTrue(user.hasReceivedMessageNotification());
-        String expectedNotification = "Twoje konto zostało zaktualizowane. Nowe imię: Anna Kowalska.";
-        assertEquals(expectedNotification, user.getLastMessageNotification());
-    }
+        User updatedUser = userService.updateUserName(originalUsername, newPassword);
 
-    @Test
-    public void testWaitingListAdditionForPopularBook() {
-         Book popularBook = new Book("9876543210", "Popular Book", "Famous Author");
-         User user1 = new User("user");
-         User user2 = new User("user");
- 
-         popularBook.addToWaitingList(user1);
-         popularBook.addToWaitingList(user2);
- 
-         assertTrue(popularBook.isInWaitingList(user1));
-         assertTrue(popularBook.isInWaitingList(user2));
+        assertNotNull(updatedUser);
+        assertEquals(newPassword, updatedUser.getPassword());
     }
 
     @Test
-    public void testNotificationToFirstInWaitingListOnBookReturn() {
-        Book returnedBook = new Book("5678901234", "Returned Book", "Some Author");
-        User user1 = new User("user");
-        User user2 = new User("user");
+    void testAddingNewEmail(){
+        String username = "testUser";
+        String newPassword = "testPassword1";
+        String email = "newemail@email.com";
 
-        returnedBook.addToWaitingList(user1);
-        returnedBook.addToWaitingList(user2);
+        User user = new User();
+        user.setUsername(username);
+        user.setPassword(newPassword);
 
-        returnedBook.returnBook();
+        // Konfiguracja Mockito
+        when(userRepository.findByUsername(username)).thenReturn(Optional.of(user));
+        when(userRepository.save(any(User.class))).thenAnswer(i -> i.getArguments()[0]);
 
-        assertTrue(user1.hasReceivedNotification());
-        assertEquals("Twoja zarezerwowana książka jest teraz dostępna: Returned Book.", user1.getLastNotification());
+        User updatedUser = userService.addEmail(username, email);
 
-        assertFalse(user2.hasReceivedNotification());
-        assertNull(user2.getLastNotification());
+        assertNotNull(updatedUser);
+        assertEquals(email, updatedUser.getEmail());
+    }
+    @Test
+    void testChangingEmail() {
+        // Ustawienie danych testowych
+        String originalUsername = "testUser";
+        String newPassword = "testPassword1";
+        String oldemail = "test@test.pl";
+        String newemail = "test2@test2.pl";
+
+        User user = new User();
+        user.setUsername(originalUsername);
+        user.setPassword(newPassword);
+
+        // Konfiguracja Mockito
+        when(userRepository.findByUsername(originalUsername)).thenReturn(Optional.of(user));
+        when(userRepository.save(any(User.class))).thenAnswer(i -> i.getArguments()[0]);
+
+        User UserwithAddedemail = userService.addEmail(originalUsername, oldemail);
+        User updatedUser = userService.updateUserEmail(originalUsername,newemail);
+        assertNotNull(updatedUser);
+        assertEquals(newemail, updatedUser.getEmail());
+    }
+    //########################################################################################################################
+    //########################################################################################################################
+    //####################################################test book ##########################################################
+    //########################################################################################################################
+    //########################################################################################################################
+    //########################################################################################################################
+
+    @Test
+    void testAddBookWithCorrectData() {
+        String title = "newtestedBook";
+        String author = "newtestedAuthor";
+
+        Book newBook = new Book();
+        newBook.setTitle(title);
+        newBook.setAuthor(author);
+        newBook.setReserved(false);
+
+        when(bookRepository.save(any(Book.class))).thenReturn(newBook);
+
+        Book savedBook = bookService.addBook(author, title);
+
+        assertEquals(title, savedBook.getTitle());
+        assertEquals(author, savedBook.getAuthor());
+        assertFalse(savedBook.isReserved());
+        verify(bookRepository).save(any(Book.class));
     }
 
     @Test
-    public void testUserCanSubmitRating() {
-        Book ratedBook = new Book("9876543210", "Rated Book", "Another Author");
-        User user = new User("user");
+    void testAddBookwithEmptyOrNullAuthor() {
+        String title = "newtestedBook";
+        String author = "";
+        String author2 = null;
 
-        user.borrowBook(ratedBook);
+        Book newBook = new Book();
+        newBook.setTitle(title);
+        newBook.setAuthor(author);
+        newBook.setReserved(false);
 
-        user.rateBook(ratedBook, 4);
+        when(bookRepository.save(any(Book.class))).thenReturn(newBook);
 
-        assertEquals(4, ratedBook.getAverageRating(), 0.001);
+        Book savedBook = bookService.addBook(author, title);
+        Book savedBook2 = bookService.addBook(author2, title);
+
+        assertNull(savedBook);
+        assertNull(savedBook2);
+
     }
 
     @Test
-    public void testReviewsImpactBookSelection() {
-        Book book1 = new Book("1111111111", "Book 1", "Author 1");
-        Book book2 = new Book("2222222222", "Book 2", "Author 2");
-        User user = new User("user");
+    void testAddBookWithEmptyOrNullTitle() {
+        String title = "";
+        String title2 = null;
+        String author = "newtestedAuthor";
 
-        user.addReview(book1, "Great book!", 5);
-        user.addReview(book2, "Not so good.", 2);
+        Book newBook = new Book();
+        newBook.setTitle(title);
+        newBook.setAuthor(author);
+        newBook.setReserved(false);
 
-        assertEquals(5, book1.getAverageRating(), 0.001);
-        assertEquals(2, book2.getAverageRating(), 0.001);
+        when(bookRepository.save(any(Book.class))).thenReturn(newBook);
 
-        Book recommendedBook = user.getRecommendedBook();
-        assertEquals(book1, recommendedBook);
+        Book savedBook = bookService.addBook(author, title);
+        Book savedBook2 = bookService.addBook(author, title2);
+
+        assertNull(savedBook);
+        assertNull(savedBook2);
     }
 
     @Test
-    public void testUserActivityHistoryWithBorrowedBooks() {
-        User user = new User("user");
-        Book book1 = new Book("1111111111", "Book 1", "Author 1");
-        Book book2 = new Book("2222222222", "Book 2", "Author 2");
+    public void testDeleteBook() {
+        Long bookId = 1L;
+        when(bookRepository.existsById(bookId)).thenReturn(true);
 
-        user.borrowBook(book1);
-        user.borrowBook(book2);
+        bookService.deleteBook(bookId);
 
-        String activityHistory = user.getActivityHistory();
-        String expectedHistory = "Wypożyczono książkę: Book 1\nWypożyczono książkę: Book 2";
-        assertEquals(expectedHistory, activityHistory);
+        verify(bookRepository).deleteById(bookId);
     }
 
     @Test
-    public void testUserActivityHistoryLateReturns() {
-        User user = new User("user");
-        Book overdueBook = new Book("3333333333", "Overdue Book", "Author 3");
+    public void testCheckBookExists() {
+        Long bookId = 1L;
+        when(bookRepository.existsById(bookId)).thenReturn(true);
 
-        user.borrowBook(overdueBook);
+        boolean exists = bookService.checkBookExists(bookId);
 
-        simulatePassageOfTime(10);
-        overdueBook.returnBook();
-
-        String activityHistory = user.getActivityHistory();
-        String expectedHistory = "Wypożyczono książkę: Overdue Book\nZwrócono książkę z opóźnieniem: Overdue Book";
-        assertEquals(expectedHistory, activityHistory);
+        assertTrue(exists);
     }
 
     @Test
-    public void testUserActivityHistoryReservationFrequency() {
-         User user = new User("user");
-         Book reservedBook = new Book("4444444444", "Reserved Book", "Author 4");
- 
-         reservedBook.addToWaitingList(user);
- 
-         String activityHistory = user.getActivityHistory();
-         String expectedHistory = "Dodano do listy oczekujących: Reserved Book";
-         assertEquals(expectedHistory, activityHistory);
+    public void testGetAllBooks() {
+        Book book1 = new Book("Title1", "Author1");
+        Book book2 = new Book("Title2", "Author2");
+        when(bookRepository.findAll()).thenReturn(Arrays.asList(book1, book2));
+
+        List<Book> books = bookService.getAllBooks();
+
+        assertNotNull(books);
+        assertEquals(2, books.size());
     }
 
     @Test
-    public void testAutomaticReturnReminder() {
-        User user = new User("user");
-        Book borrowedBook = new Book("5555555555", "Borrowed Book", "Author 5");
+    public void testUpdateBookTitle() {
+        Long bookId = 1L;
+        String newTitle = "New Title";
+        Book book = new Book("Old Title", "Author");
+        when(bookRepository.findById(bookId)).thenReturn(Optional.of(book));
+        when(bookRepository.save(any(Book.class))).thenAnswer(i -> i.getArguments()[0]);
 
-        user.borrowBook(borrowedBook);
+        bookService.updateBookTitle(bookId, newTitle);
 
-        simulatePassageOfTime(7);
-
-        assertTrue(user.hasReceivedNotification());
-        assertEquals("Przypomnienie: Termin zwrotu książki Approaching Deadline Book zbliża się.", user.getLastNotification());
+        assertEquals(newTitle, book.getTitle());
     }
-
-    @Test
-    public void testBookCategorization() {
-        // todo: rozwiń implementacje
-    }
-    @Test
-    public void testEmailNotificationService() {
-        // todo: rozwiń implementacje
-    }
+    //########################################################################################################################
+    //########################################################################################################################
+    //################################################test book Statuses #####################################################
+    //########################################################################################################################
+    //########################################################################################################################
+    //########################################################################################################################
 
     @Test
-    public void testMessageNotificationService() {
-        // todo: rozwiń implementacje
-    }
-    @Test
-    public void testAddingUserToWaitingList() {
-        // todo: rozwiń implementacje
-    }
+    public void testMarkBookAsReserved() {
+        Long bookId = 1L;
+        BookStatuses bookStatuses = new BookStatuses();
+        when(bookStatusesRepository.findByBook_Id(bookId)).thenReturn(Optional.of(bookStatuses));
 
-    @Test
-    public void testNotificationToFirstUserInWaitingList() {
-        // todo: rozwiń implementacje
-    }
-    @Test
-    public void testSubmittingRating() {
-        // todo: rozwiń implementacje
+        bookStatusesService.markBookAsReserved(bookId);
+
+        assertTrue(bookStatuses.isReserved());
+        assertFalse(bookStatuses.isAvailable());
+        verify(bookStatusesRepository).save(bookStatuses);
     }
 
     @Test
-    public void testImpactOfReviews() {
-        // todo: rozwiń implementacje
-    }
-    @Test
-    public void testUserActivityHistory() {
-        // todo: rozwiń implementacje
+    public void testMarkBookAsUnavailable() {
+        Long bookId = 1L;
+        BookStatuses bookStatuses = new BookStatuses();
+        when(bookStatusesRepository.findByBook_Id(bookId)).thenReturn(Optional.of(bookStatuses));
+
+        bookStatusesService.markBookAsUnavailable(bookId);
+
+        assertFalse(bookStatuses.isAvailable());
+        verify(bookStatusesRepository).save(bookStatuses);
     }
 
     @Test
-    public void testUserActivityMetrics() {
-        // todo: rozwiń implementacje
+    public void testIsBookReserved() {
+        Long bookId = 1L;
+        BookStatuses bookStatuses = new BookStatuses();
+        bookStatuses.setReserved(true);
+        when(bookStatusesRepository.findByBook_Id(bookId)).thenReturn(Optional.of(bookStatuses));
+
+        boolean isReserved = bookStatusesService.isBookReserved(bookId);
+
+        assertTrue(isReserved);
     }
+
+    @Test
+    public void testIsBookAvailable() {
+        Long bookId = 1L;
+        BookStatuses bookStatuses = new BookStatuses();
+        bookStatuses.setAvailable(true);
+        when(bookStatusesRepository.findByBook_Id(bookId)).thenReturn(Optional.of(bookStatuses));
+
+        boolean isAvailable = bookStatusesService.isBookAvailable(bookId);
+
+        assertTrue(isAvailable);
+    }
+
+    //##################################################################################################
+    //##################################################################################################
+    //##################################################################################################
+    //##########################################CATEGORY################################################
+    //##################################################################################################
+    //##################################################################################################
+    //##################################################################################################
+    @Test
+    public void assignCategoryToBook_Success() {
+        Long bookId = 1L;
+        Long categoryId = 1L;
+        Book book = new Book();
+        Category category = new Category();
+
+        when(bookRepository.findById(bookId)).thenReturn(Optional.of(book));
+        when(categoryRepository.findById(categoryId)).thenReturn(Optional.of(category));
+
+        assertDoesNotThrow(() -> categoryService.assignCategoryToBook(bookId, categoryId));
+        verify(bookRepository).save(book);
+    }
+
+    
 }

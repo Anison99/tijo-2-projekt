@@ -1,4 +1,4 @@
-package com.library.tijoLibrary;
+/*package com.library.tijoLibrary;
 
 import com.library.tijoLibrary.models.Book;
 import com.library.tijoLibrary.models.Category;
@@ -308,26 +308,112 @@ public class LibraryIntegrationTests {
 
     @Test
     public void testBookRecommendationsIntegration() {
-        // todo: rozwiń implementacje
+        Book book1 = new Book("Book 1", "Author 1", "ISBN 1");
+        Book book2 = new Book("Book 2", "Author 2", "ISBN 2");
+        Book book3 = new Book("Book 3", "Author 3", "ISBN 3");
+
+        User user = new User("User");
+
+        user.borrowBook(book1);
+        user.borrowBook(book2);
+        user.borrowBook(book3);
+
+        List<Book> recommendedBooks = user.getRecommendedBooks();
+
+        assertFalse(recommendedBooks.isEmpty());
+        assertTrue(recommendedBooks.contains(book1));
+        assertTrue(recommendedBooks.contains(book2));
+        assertTrue(recommendedBooks.contains(book3));
     }
 
     @Test
     public void testNotificationServiceIntegration() {
-        // todo: rozwiń implementacje
+        User user = new User("User");
+        Book book = new Book("Book Title", "Author", "ISBN");
+        book.addToWaitingList(user);
+        book.returnBook();
+
+        assertTrue(user.hasReceivedNotification());
     }
 
     @Test
     public void testWaitingListServiceIntegration() {
-        // todo: rozwiń implementacje
+        User user1 = new User("User1");
+        User user2 = new User("User2");
+        Book popularBook = new Book("Popular Book", "Author", "ISBN");
+
+        popularBook.addToWaitingList(user1);
+        popularBook.addToWaitingList(user2);
+
+        assertTrue(popularBook.isInWaitingList(user1));
+        assertTrue(popularBook.isInWaitingList(user2));
     }
 
     @Test
     public void testRatingServiceIntegration() {
-        // todo: rozwiń implementacje
+        User user = new User("User");
+        Book ratedBook = new Book("Rated Book", "Author", "ISBN");
+
+        user.borrowBook(ratedBook);
+        user.rateBook(ratedBook, 4);
+
+        assertEquals(4, ratedBook.getAverageRating(), 0.01);
     }
 
     @Test
     public void testUserActivityServiceIntegration() {
-        // todo: rozwiń implementacje
+        User user = new User("User");
+        Book borrowedBook = new Book("Integrated Book", "Author", "ISBN");
+
+        user.borrowBook(borrowedBook);
+        assertTrue(user.isBookInActivityHistory(borrowedBook));
+    }
+    // --------------------------------------------
+    @Test
+    public void testAddingNewBookToCatalog() {
+        Book newBook = new Book("New Book", "New Author", "New ISBN");
+        bookService.addBook(newBook);
+        assertTrue(bookService.getBooks().contains(newBook));
+    }
+
+    @Test
+    public void testRemovingBookFromCatalog() {
+        Book bookToRemove = bookService.findBookByTitle("BookToRemove");
+        bookService.removeBook(bookToRemove);
+
+        assertFalse(bookService.getBooks().contains(bookToRemove));
+    }
+
+    @Test
+    public void testReservingBookProcess() {
+        Book availableBook = bookService.findAvailableBook("AvailableBook");
+        boolean isReserved = reservationService.reserveBookForUser(availableBook, currentUser);
+        assertTrue(isReserved);
+    }
+
+    @Test
+    public void testExtendingReservationProcess() {
+        User user = userService.login("username", "password");
+
+        List<Reservation> reservations = reservationService.getUserReservations(user);
+
+        boolean isExtended = reservationService.extendReservation(reservations.get(0));
+
+        assertTrue(isExtended);
+    }
+
+    @Test
+    public void testCheckingLoanHistory() {
+        List<Loan> loanHistory = userService.getLoanHistory(currentUser);
+        assertEquals(expectedLoanHistorySize, loanHistory.size());
+    }
+
+    @Test
+    public void testInvalidLoginAttempt() {
+        String invalidUsername = "InvalidUser";
+        String password = "CorrectPassword";
+        User loggedInUser = userService.login(invalidUsername, password);
+        assertNull(loggedInUser);
     }
 }
+*/

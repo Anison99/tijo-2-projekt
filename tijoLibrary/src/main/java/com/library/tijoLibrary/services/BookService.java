@@ -1,33 +1,75 @@
 package com.library.tijoLibrary.services;
 
 import com.library.tijoLibrary.models.Book;
+import com.library.tijoLibrary.models.User;
 import com.library.tijoLibrary.repositories.BookRepository;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
+import javax.persistence.EntityNotFoundException;
 import java.util.Collection;
+import java.util.List;
 
 @Service
 public class BookService {
     @Autowired
-     private BookRepository bookRepository;
+    private BookRepository bookRepository;
 
-    public BookService() {
-        this.bookRepository = bookRepository;
+    // Pobieranie listy wszystkich książek
+    public Collection<Book> getBooks() {
+        return bookRepository.findAll();
     }
 
-    public void addBook(Book newBook) {
-    }
-
-    public Collection<Object> getBooks() {
+    // Dodawanie nowej książki
+    public Book addBook(String author, String title) {
+        if(author != null
+                && author != ""
+                && title != null
+                && title != ""
+        )
+        {
+            Book newBook = new Book();
+            newBook.setAuthor(author);
+            newBook.setTitle(title);
+            newBook.setReserved(false);
+            return bookRepository.save(newBook);
+        }
         return null;
+
     }
 
-    public void removeBook(Book book) {
+
+    public void deleteBook(Long bookId) {
+        if (bookRepository.existsById(bookId)) {
+            bookRepository.deleteById(bookId);
+        } else {
+            throw new EntityNotFoundException("Book with ID " + bookId + " not found");
+        }
     }
 
-    public boolean checkAvailability(Book availableBook) {
-        return false;
+    // Sprawdzenie czy książka istnieje
+    public boolean checkBookExists(Long bookId) {
+        return bookRepository.existsById(bookId);
     }
 
+    // Wyświetlenie wszystkich książek
+    public List<Book> getAllBooks() {
+        return bookRepository.findAll();
+    }
+
+    // Zmiana tytułu książki
+    public void updateBookTitle(Long bookId, String newTitle) {
+        Book book = bookRepository.findById(bookId)
+                .orElseThrow(() -> new EntityNotFoundException("Book with ID " + bookId + " not found"));
+        book.setTitle(newTitle);
+        bookRepository.save(book);
+    }
+
+    // Zmiana autora książki
+    public void updateBookAuthor(Long bookId, String newAuthor) {
+        Book book = bookRepository.findById(bookId)
+                .orElseThrow(() -> new EntityNotFoundException("Book with ID " + bookId + " not found"));
+        book.setAuthor(newAuthor);
+        bookRepository.save(book);
+    }
 }
