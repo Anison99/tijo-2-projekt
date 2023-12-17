@@ -210,3 +210,89 @@ Nasza aplikacja ma na celu zarządzanie zasobami wirtualnej biblioteki, umożliw
 - Krok 2: Usuń swoją recenzję. 
 
 - Krok 3: Zweryfikuj, czy recenzja została poprawnie usunięta. 
+
+### 22. Scenariusz testowy : Usunięcie pozycji z historii 
+
+- Krok 1 : Przejście do historii 
+
+- Krok 2 : Wybór pozycji do usunięcia 
+
+- Krok 3 : Usunięcie danej pozycji 
+
+- Krok 4 : Zatwierdzenie zmian 
+
+### 23. Scenariusz testowy : Usuń ocenę 
+
+- Krok 1 : Przejście do ocen 
+
+- Krok 2 : Wybór pozycji do usunięcia 
+
+- Krok 3 : Usunięcie danej pozycji 
+
+- Krok 4 : Zatwierdzenie zmian 
+
+### 24. Scenariusz testowy : Zmień ocenę 
+
+- Krok 1 : Przejście do ocen 
+
+- Krok 2 : Wybór oceny, którą chcemy zmienić  
+
+- Krok 3 : Zmiana oceny 
+
+- Krok 4 : Zatwierdzenie zmian 
+
+### 25. Scenariusz testowy : Dodaj recenzje 
+
+- Krok 1 : Przejście do recenzji 
+
+- Krok 2 : Wybór pozycji, którą chcemy zrecenzować 
+
+- Krok 3 : Dodanie recenzji 
+
+- Krok 4 : Zatwierdzenie recenzji 
+
+### 26. Scenariusz testowy : Zmień recenzje 
+
+- Krok 1 : Przejście do recenzji 
+
+- Krok 2 : Wybór recenzji, którą chcemy zmienić  
+
+- Krok 3 : Zmiana recenzji 
+
+- Krok 4 : Zatwierdzenie zmian 
+
+### 27. Scenariusz testowy : Wyszukanie książki o konkretnej kategorii 
+
+- Krok 1 : Przejście do wyszukiwania 
+
+- Krok 2 : Wyprowadzenie do kryteriów wyszukiwania konkretnej kategorii 
+
+- Krok 3 : Zastosowanie filtra i wyszukanie pozycji 
+
+### 28. Scenariusz testowy : Dodawanie się do listy oczekujących: 
+
+- Krok 1: Znajdź popularną książkę. 
+
+- Krok 2: Dodaj się do listy oczekujących. 
+
+- Krok 3: Zweryfikuj, czy użytkownik jest dodany na listę oczekujących. 
+
+ 
+### 29. Scenariusz testowy : Usuwanie z listy oczekujących: 
+  
+
+- Krok 1: Wejdź na listę oczekujących. 
+
+- Krok 2: Usuń się z listy oczekujących. 
+
+- Krok 3: Zweryfikuj, czy użytkownik nie otrzymuje powiadomienia o dostępności książki. 
+
+ 
+### 30. Scenariusz testowy : Wyświetlanie wszystkich wypożyczonych 
+
+ 
+- Krok 1 : Wejdź na swój profil 
+
+- Krok 2 : Przejdź do zakładki wypożyczone 
+
+- Krok 3 : Sprawdź czy w zakładce wyświetlają się wszystkie pozycje, które są aktualnie przez
