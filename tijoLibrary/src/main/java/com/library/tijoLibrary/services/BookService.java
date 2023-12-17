@@ -15,11 +15,6 @@ public class BookService {
     @Autowired
     private BookRepository bookRepository;
 
-    // Pobieranie listy wszystkich książek
-    public Collection<Book> getBooks() {
-        return bookRepository.findAll();
-    }
-
     // Dodawanie nowej książki
     public Book addBook(String author, String title) {
         if(author != null

@@ -20,8 +20,10 @@ public class Rating {
     @Column(name = "rating",nullable = false)
     private int rating;
 
-    @Column(name = "recension")
-    private String recension;
+    @Column(name = "review")
+    private String review;
+
+
 
     public Long getId() {
         return id;
@@ -53,6 +55,13 @@ public class Rating {
 
     public void setRating(int rating) {
         this.rating = rating;
+    }
+
+    public void setReview(String review) {
+        this.review = review;
+    }
+    public String getReview() {
+        return review;
     }
 }
 

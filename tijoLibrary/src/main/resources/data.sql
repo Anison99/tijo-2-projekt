@@ -24,6 +24,16 @@ INSERT INTO Book (title, author, isReserved) VALUES
 ('Tytuł Książki 2', 'Autor 2', FALSE),
 ('Tytuł Książki 3', 'Autor 3', FALSE);
 
+CREATE TABLE Category (
+    id BIGINT AUTO_INCREMENT PRIMARY KEY,
+    categoryName VARCHAR(255) NOT NULL
+);
+INSERT INTO Category (categoryName) VALUES
+('Thriller'),
+('Komedia'),
+('Romans'),
+('Kryminał'),
+('Reportaż');
 
 CREATE TABLE BookStatuses (
     id BIGINT AUTO_INCREMENT PRIMARY KEY,
@@ -48,18 +58,8 @@ CREATE TABLE Rating (
     user_id BIGINT NOT NULL,
     book_id BIGINT NOT NULL,
     rating INT NOT NULL,
-    recension VARCHAR(255),
+    review VARCHAR(255),
     FOREIGN KEY (user_id) REFERENCES User(id),
     FOREIGN KEY (book_id) REFERENCES Book(id)
 );
 
-CREATE TABLE Category (
-    id BIGINT AUTO_INCREMENT PRIMARY KEY,
-    categoryName VARCHAR(255) NOT NULL
-);
-INSERT INTO Category (categoryName) VALUES
-('Thriller'),
-('Komedia'),
-('Romans'),
-('Kryminał'),
-('Reportaż');

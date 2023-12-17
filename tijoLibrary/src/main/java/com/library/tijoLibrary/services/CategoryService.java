@@ -25,7 +25,7 @@ public class CategoryService {
         Category category = categoryRepository.findById(categoryId)
                 .orElseThrow(() -> new EntityNotFoundException("Category with ID " + categoryId + " not found"));
 
-        book.setCategory(category); // Zmienione
+        book.setCategory(category);
         bookRepository.save(book);
     }
 
@@ -39,6 +39,12 @@ public class CategoryService {
         Book book = bookRepository.findById(bookId)
                 .orElseThrow(() -> new EntityNotFoundException("Book with ID " + bookId + " not found"));
         return book.getCategory();
+    }
+
+    public Category addCategory(String categoryName) {
+        Category category = new Category();
+        category.setCategoryName(categoryName);
+        return categoryRepository.save(category);
     }
 
 }

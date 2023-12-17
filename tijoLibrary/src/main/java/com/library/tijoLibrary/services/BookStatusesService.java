@@ -59,6 +59,7 @@ public class BookStatusesService {
         BookStatuses bookStatuses = getBookStatuses(bookId);
         bookStatuses.setUser(null);
         bookStatuses.setReserved(false);
+        bookStatuses.setAvailable(true);
         bookStatusesRepository.save(bookStatuses);
     }
 
@@ -66,4 +67,5 @@ public class BookStatusesService {
         return bookStatusesRepository.findByBook_Id(bookId)
                 .orElseThrow(() -> new EntityNotFoundException("BookStatuses for book ID " + bookId + " not found"));
     }
+
 }

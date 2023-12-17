@@ -22,8 +22,6 @@ public class BookStatuses {
     @Column(name = "isAvailable", nullable = false)
     private boolean isAvailable;
 
-    @Column(name = "status", nullable = false)
-    private Boolean status;
 
     public boolean isReserved() {
         return isReserved;
@@ -71,14 +69,6 @@ public class BookStatuses {
 
     public Long getUserId() {
         return user != null ? user.getId() : null;
-    }
-
-    public Boolean getStatus() {
-        return status;
-    }
-
-    public void setStatus(Boolean status) {
-        this.status = status;
     }
 
 }
