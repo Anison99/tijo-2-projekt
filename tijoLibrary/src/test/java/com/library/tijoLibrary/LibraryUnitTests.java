@@ -1,10 +1,7 @@
 package com.library.tijoLibrary;
 
 import com.library.tijoLibrary.models.*;
-import com.library.tijoLibrary.repositories.BookRepository;
-import com.library.tijoLibrary.repositories.BookStatusesRepository;
-import com.library.tijoLibrary.repositories.CategoryRepository;
-import com.library.tijoLibrary.repositories.UserRepository;
+import com.library.tijoLibrary.repositories.*;
 import com.library.tijoLibrary.services.*;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
@@ -45,7 +42,16 @@ public class LibraryUnitTests {
 
     @InjectMocks
     private CategoryService categoryService;
+    @Mock
+    private HistoryRepository historyRepository;
 
+    @InjectMocks
+    private HistoryService historyService;
+    @Mock
+    private RatingRepository ratingRepository;
+
+    @InjectMocks
+    private RatingService ratingService;
 
     @BeforeEach
     public void setUp() {
@@ -517,5 +523,217 @@ public class LibraryUnitTests {
         verify(bookRepository).save(book);
     }
 
+    @Test
+    public void getUserLoanHistory_Success() {
+        Long userId = 1L;
+        History history1 = new History();
+        history1.setUserId(userId);
+        History history2 = new History();
+        history2.setUserId(userId);
+        List<History> histories = Arrays.asList(history1, history2);
 
+        when(historyRepository.findByUserId(userId)).thenReturn(histories);
+
+        List<History> result = historyService.getUserLoanHistory(userId);
+
+        assertNotNull(result);
+        assertEquals(2, result.size());
+        verify(historyRepository).findByUserId(userId);
+    }
+
+    @Test
+    public void deleteHistoryEntry_Success() {
+        Long historyId = 1L;
+        doNothing().when(historyRepository).deleteById(historyId);
+
+        assertDoesNotThrow(() -> historyService.deleteHistoryEntry(historyId));
+        verify(historyRepository).deleteById(historyId);
+    }
+
+    @Test
+    public void markBookAsReserved_Success() {
+        Long bookId = 1L;
+        BookStatuses bookStatuses = new BookStatuses();
+        when(bookStatusesRepository.findByBook_Id(bookId)).thenReturn(Optional.of(bookStatuses));
+
+        bookStatusesService.markBookAsReserved(bookId);
+
+        verify(bookStatusesRepository).save(bookStatuses);
+        assertTrue(bookStatuses.isReserved());
+        assertFalse(bookStatuses.isAvailable());
+    }
+
+    @Test
+    public void markBookAsUnavailable_Success() {
+        Long bookId = 1L;
+        BookStatuses bookStatuses = new BookStatuses();
+        when(bookStatusesRepository.findByBook_Id(bookId)).thenReturn(Optional.of(bookStatuses));
+
+        bookStatusesService.markBookAsUnavailable(bookId);
+
+        verify(bookStatusesRepository).save(bookStatuses);
+        assertFalse(bookStatuses.isAvailable());
+    }
+
+    @Test
+    public void isBookReserved_Success() {
+        Long bookId = 1L;
+        BookStatuses bookStatuses = new BookStatuses();
+        bookStatuses.setReserved(true);
+        when(bookStatusesRepository.findByBook_Id(bookId)).thenReturn(Optional.of(bookStatuses));
+
+        boolean result = bookStatusesService.isBookReserved(bookId);
+
+        assertTrue(result);
+    }
+
+    @Test
+    public void isBookAvailable_Success() {
+        Long bookId = 1L;
+        BookStatuses bookStatuses = new BookStatuses();
+        bookStatuses.setAvailable(true);
+        when(bookStatusesRepository.findByBook_Id(bookId)).thenReturn(Optional.of(bookStatuses));
+
+        boolean result = bookStatusesService.isBookAvailable(bookId);
+
+        assertTrue(result);
+    }
+
+    @Test
+    public void assignStatusToNewBook_Success() {
+        Long bookId = 1L;
+        Book book = new Book();
+        when(bookRepository.findById(bookId)).thenReturn(Optional.of(book));
+
+        bookStatusesService.assignStatusToNewBook(bookId, true, false);
+
+        verify(bookStatusesRepository).save(any(BookStatuses.class));
+    }
+
+    @Test
+    public void removeUserFromBook_Success() {
+        Long bookId = 1L;
+        BookStatuses bookStatuses = new BookStatuses();
+        when(bookStatusesRepository.findByBook_Id(bookId)).thenReturn(Optional.of(bookStatuses));
+
+        bookStatusesService.removeUserFromBook(bookId);
+
+        verify(bookStatusesRepository).save(bookStatuses);
+        assertNull(bookStatuses.getUser());
+        assertFalse(bookStatuses.isReserved());
+        assertTrue(bookStatuses.isAvailable());
+    }
+    @Test
+    public void addRating_Success() {
+        Long userId = 1L;
+        Long bookId = 1L;
+        User user = new User();
+        Book book = new Book();
+        Rating rating = new Rating();
+
+        when(userRepository.findById(userId)).thenReturn(Optional.of(user));
+        when(bookRepository.findById(bookId)).thenReturn(Optional.of(book));
+        when(ratingRepository.save(any(Rating.class))).thenReturn(rating);
+
+        Rating result = ratingService.addRating(userId, bookId, 5);
+
+        assertNotNull(result);
+        verify(ratingRepository).save(any(Rating.class));
+    }
+
+    @Test
+    public void deleteRating_Success() {
+        Long ratingId = 1L;
+        doNothing().when(ratingRepository).deleteById(ratingId);
+
+        assertDoesNotThrow(() -> ratingService.deleteRating(ratingId));
+        verify(ratingRepository).deleteById(ratingId);
+    }
+
+    @Test
+    public void updateRating_Success() {
+        Long ratingId = 1L;
+        Rating rating = new Rating();
+        when(ratingRepository.findById(ratingId)).thenReturn(Optional.of(rating));
+
+        assertDoesNotThrow(() -> ratingService.updateRating(ratingId, 5));
+        verify(ratingRepository).save(rating);
+    }
+
+    @Test
+    public void getRatingsForBook_Success() {
+        Long bookId = 1L;
+        when(ratingRepository.findByBookId(bookId)).thenReturn(Arrays.asList(new Rating(), new Rating()));
+
+        List<Rating> result = ratingService.getRatingsForBook(bookId);
+
+        assertNotNull(result);
+        assertEquals(2, result.size());
+        verify(ratingRepository).findByBookId(bookId);
+    }
+    @Test
+    public void addReview_Success() {
+        Long userId = 1L;
+        Long bookId = 1L;
+        String review = "Excellent book!";
+        User user = new User();
+        Book book = new Book();
+        Rating rating = new Rating();
+
+        when(userRepository.findById(userId)).thenReturn(Optional.of(user));
+        when(bookRepository.findById(bookId)).thenReturn(Optional.of(book));
+        when(ratingRepository.save(any(Rating.class))).thenReturn(rating);
+
+        Rating result = ratingService.addReview(userId, bookId, review);
+
+        assertNotNull(result);
+        verify(ratingRepository).save(any(Rating.class));
+    }
+
+    @Test
+    public void updateReview_Success() {
+        Long ratingId = 1L;
+        String newReview = "Updated review";
+        Rating rating = new Rating();
+        when(ratingRepository.findById(ratingId)).thenReturn(Optional.of(rating));
+
+        assertDoesNotThrow(() -> ratingService.updateReview(ratingId, newReview));
+        verify(ratingRepository).save(rating);
+    }
+
+    @Test
+    public void deleteReview_Success() {
+        Long ratingId = 1L;
+        Rating rating = new Rating();
+        rating.setReview("Initial review");
+        when(ratingRepository.findById(ratingId)).thenReturn(Optional.of(rating));
+
+        assertDoesNotThrow(() -> ratingService.deleteReview(ratingId));
+        verify(ratingRepository).save(rating);
+    }
+
+    @Test
+    public void getReviewsForBook_Success() {
+        Long bookId = 1L;
+        when(ratingRepository.findByBookId(bookId)).thenReturn(Arrays.asList(new Rating(), new Rating()));
+
+        List<Rating> result = ratingService.getReviewsForBook(bookId);
+
+        assertNotNull(result);
+        assertEquals(2, result.size());
+        verify(ratingRepository).findByBookId(bookId);
+    }
+
+    @Test
+    public void getReviewsMadeByUser_Success() {
+        Long userId = 1L;
+        when(ratingRepository.findByUserId(userId)).thenReturn(Arrays.asList(new Rating(), new Rating()));
+
+        List<Rating> result = ratingService.getReviewsMadeByUser(userId);
+
+        assertNotNull(result);
+        assertEquals(2, result.size());
+        verify(ratingRepository).findByUserId(userId);
+    }
+    
 }
