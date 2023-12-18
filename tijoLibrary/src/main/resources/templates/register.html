@@ -1,0 +1,40 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <title>Register</title>
+    <script>
+        function registerUser(event) {
+            event.preventDefault(); // Zapobieganie domyślnemu działaniu formularza
+
+            var username = document.getElementById('username').value;
+            var password = document.getElementById('password').value;
+
+            var xhr = new XMLHttpRequest();
+            xhr.open("POST", "/api/users/register", true);
+            xhr.setRequestHeader("Content-Type", "application/json"); // Zmiana typu zawartości na JSON
+
+            xhr.onreadystatechange = function () {
+                if (xhr.readyState === 4) {
+                    var response = xhr.responseText;
+                    console.log("Response: ", response);
+                    // Obsługa odpowiedzi
+                }
+            };
+
+            var data = JSON.stringify({username: username, password: password}); // Konwersja danych do formatu JSON
+            console.log(data);
+            xhr.send(data);
+        }
+    </script>
+</head>
+<body>
+<h1>Register</h1>
+<form onsubmit="registerUser(event)">
+    <label for="username">Username:</label><br>
+    <input type="text" id="username" name="username"><br>
+    <label for="password">Password:</label><br>
+    <input type="password" id="password" name="password"><br>
+    <input type="submit" value="Register">
+</form>
+</body>
+</html>

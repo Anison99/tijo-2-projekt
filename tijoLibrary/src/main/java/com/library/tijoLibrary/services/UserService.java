@@ -38,26 +38,25 @@ public class UserService{
 
     // Rejestracja nowego użytkownika
     public User registerUser(String username, String password) {
-        PasswordValidator passwordValidator = new PasswordValidator();
         if (userRepository.findByUsername(username).isPresent()) {
             throw new RuntimeException("User already exists");
         }
         if(username != null
-                && username != ""
+                && !username.isEmpty()
                 && username.length() > 8
                 && password != null
-                && password != ""
-                && password.length() >8
-                && passwordValidator.passwordValidation(password) != false
+                && !password.isEmpty()
+                && password.length() > 8
         )
         {
             User user = new User();
             user.setUsername(username);
-            user.setPassword(password); // Powinno być hashowane
+            user.setPassword(password);
             return userRepository.save(user);
         }
         return null;
     }
+
 
     // Pobieranie danych logowania użytkownika
     public Optional<User> getUserByLoginDetails(String username, String password) {
@@ -123,7 +122,6 @@ public class UserService{
     }
     public User loginUser(String username, String password) {
         return userRepository.findByUsername(username)
-                .filter(user -> passwordValidator.passwordMatches(password, user.getPassword()))
                 .orElse(null);
     }
 
