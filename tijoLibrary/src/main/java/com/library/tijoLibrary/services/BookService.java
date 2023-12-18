@@ -33,7 +33,6 @@ public class BookService {
 
     }
 
-
     public void deleteBook(Long bookId) {
         if (bookRepository.existsById(bookId)) {
             bookRepository.deleteById(bookId);
@@ -67,4 +66,16 @@ public class BookService {
         book.setAuthor(newAuthor);
         bookRepository.save(book);
     }
+    public Book getBookById(Long bookId) {
+        return bookRepository.findById(bookId)
+                .orElseThrow(() -> new EntityNotFoundException("Book with ID " + bookId + " not found"));
+    }
+    public Book updateBook(Long bookId, Book bookDetails) {
+        Book book = getBookById(bookId);
+        book.setTitle(bookDetails.getTitle());
+        book.setAuthor(bookDetails.getAuthor());
+        return bookRepository.save(book);
+    }
+
+
 }

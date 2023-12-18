@@ -2,32 +2,39 @@ package com.library.tijoLibrary.services;
 
 import com.library.tijoLibrary.models.User;
 import com.library.tijoLibrary.repositories.UserRepository;
+import com.library.tijoLibrary.validators.EmailValidator;
 import com.library.tijoLibrary.validators.PasswordValidator;
 import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.security.core.userdetails.UserDetails;
-import org.springframework.security.core.userdetails.UserDetailsService;
-import org.springframework.security.core.userdetails.UsernameNotFoundException;
+//import org.springframework.security.core.userdetails.UserDetails;
+//import org.springframework.security.core.userdetails.UserDetailsService;
+//import org.springframework.security.core.userdetails.UsernameNotFoundException;
 import org.springframework.stereotype.Service;
 
 
 import javax.persistence.EntityNotFoundException;
+import java.util.List;
 import java.util.Optional;
 
 @Service
 public class UserService{
     @Autowired
     private UserRepository userRepository;
+    @Autowired
+    private PasswordValidator passwordValidator;
 
     // Pobieranie użytkownika po ID
     public User getUserById(Long userId) {
         return userRepository.findById(userId).orElseThrow(() -> new RuntimeException("User not found"));
     }
 
+    /*
     // Ładowanie użytkownika po nazwie użytkownika
     public User loadUserByUsername(String username) throws UsernameNotFoundException {
         return userRepository.findByUsername(username)
                 .orElseThrow(() -> new UsernameNotFoundException("User not found with username: " + username));
     }
+
+     */
 
     // Rejestracja nowego użytkownika
     public User registerUser(String username, String password) {
@@ -104,4 +111,20 @@ public class UserService{
         user.setEmail(newEmail);
         return userRepository.save(user);
     }
+    public List<User> getAllUsers() {
+        return userRepository.findAll();
+    }
+    public User updateUser(Long userId, User userDetails) {
+        User user = getUserById(userId);
+        user.setUsername(userDetails.getUsername());
+        user.setPassword(userDetails.getPassword());
+        user.setEmail(userDetails.getEmail());
+        return userRepository.save(user);
+    }
+    public User loginUser(String username, String password) {
+        return userRepository.findByUsername(username)
+                .filter(user -> passwordValidator.passwordMatches(password, user.getPassword()))
+                .orElse(null);
+    }
+
 }

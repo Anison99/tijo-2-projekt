@@ -1,8 +1,11 @@
 package com.library.tijoLibrary.validators;
 
+import org.springframework.stereotype.Component;
+
 import java.util.regex.Matcher;
 import java.util.regex.Pattern;
 
+@Component
 public class EmailValidator {
 
     public boolean isValid(String email) {
