@@ -8,7 +8,7 @@ public class AddBookController {
 
     @GetMapping("/add-book")
     public String addBook() {
-        return "add-book"; // Plik HTML: resources/templates/add-book.html
+        return "add-book";
     }
 }
 

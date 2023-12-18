@@ -13,4 +13,13 @@ public class LoginController {
         model.addAttribute("user", new User());
         return "login";
     }
+    @GetMapping("/loginSuccess")
+    public String loginSuccess() {
+        return "redirect:/user-profile";
+    }
+
+    @GetMapping("/loginFailure")
+    public String loginFailure() {
+        return "redirect:/login?error=true";
+    }
 }

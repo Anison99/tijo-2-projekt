@@ -8,6 +8,6 @@ public class UserProfileController {
 
     @GetMapping("/user-profile")
     public String userProfile() {
-        return "user-profile"; // Plik HTML: resources/templates/user-profile.html
+        return "user-profile";
     }
 }

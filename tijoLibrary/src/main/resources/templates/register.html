@@ -1,40 +1,54 @@
 <!DOCTYPE html>
 <html lang="en">
 <head>
-    <title>Register</title>
-    <script>
-        function registerUser(event) {
-            event.preventDefault(); // Zapobieganie domyślnemu działaniu formularza
-
-            var username = document.getElementById('username').value;
-            var password = document.getElementById('password').value;
-
-            var xhr = new XMLHttpRequest();
-            xhr.open("POST", "/api/users/register", true);
-            xhr.setRequestHeader("Content-Type", "application/json"); // Zmiana typu zawartości na JSON
-
-            xhr.onreadystatechange = function () {
-                if (xhr.readyState === 4) {
-                    var response = xhr.responseText;
-                    console.log("Response: ", response);
-                    // Obsługa odpowiedzi
-                }
-            };
-
-            var data = JSON.stringify({username: username, password: password}); // Konwersja danych do formatu JSON
-            console.log(data);
-            xhr.send(data);
-        }
-    </script>
+    <meta charset="UTF-8">
+    <title>Rejestracja</title>
+    <link href="https://maxcdn.bootstrapcdn.com/bootstrap/4.5.2/css/bootstrap.min.css" rel="stylesheet">
 </head>
 <body>
-<h1>Register</h1>
-<form onsubmit="registerUser(event)">
-    <label for="username">Username:</label><br>
-    <input type="text" id="username" name="username"><br>
-    <label for="password">Password:</label><br>
-    <input type="password" id="password" name="password"><br>
-    <input type="submit" value="Register">
-</form>
+<div class="container mt-4">
+    <h2>Rejestracja</h2>
+    <form id="registerForm">
+        <div class="form-group">
+            <label for="username">Nazwa użytkownika:</label>
+            <input type="text" id="username" class="form-control">
+        </div>
+        <div class="form-group">
+            <label for="password">Hasło:</label>
+            <input type="password" id="password" class="form-control">
+        </div>
+        <button type="submit" class="btn btn-primary">Zarejestruj się</button>
+    </form>
+</div>
+
+<script src="https://code.jquery.com/jquery-3.5.1.min.js"></script>
+<script>
+    $(document).ready(function() {
+        $('#registerForm').submit(function(event) {
+            event.preventDefault();
+
+            var userData = {
+                username: $('#username').val(),
+                password: $('#password').val()
+            };
+
+            $.ajax({
+                url: '/api/users/register',
+                type: 'POST',
+                contentType: 'application/json',
+                data: JSON.stringify(userData),
+                success: function(response) {
+                    // Zapisz ID użytkownika w localStorage
+                    localStorage.setItem('userId', response.id);
+                    alert('Rejestracja zakończona sukcesem.');
+                    window.location.href = '/login';
+                },
+                error: function(xhr, status, error) {
+                    alert('Błąd rejestracji: ' + xhr.responseText);
+                }
+            });
+        });
+    });
+</script>
 </body>
 </html>

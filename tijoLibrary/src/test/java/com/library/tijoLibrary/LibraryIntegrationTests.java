@@ -189,39 +189,7 @@ public class LibraryIntegrationTests {
         assertFalse(bookRepository.existsById(book.getId()));
     }
 
-    //ANITA I DOMINIK
-    //ANITA I DOMINIK
-    //ANITA I DOMINIK
-    //ANITA I DOMINIK
-    //ANITA I DOMINIK
-    //ANITA I DOMINIK
-    //ANITA I DOMINIK
-    //ANITA I DOMINIK
-    //ANITA I DOMINIK
-    //ANITA I DOMINIK
-    //ANITA I DOMINIK
-    //ANITA I DOMINIK
-    //ANITA I DOMINIK
-    //ANITA I DOMINIK
-    //ANITA I DOMINIK
-    //ANITA I DOMINIK
-    //ANITA I DOMINIK
-    //ANITA I DOMINIK
-    //ANITA I DOMINIK
-    //ANITA I DOMINIK
-    //ANITA I DOMINIK
-    //ANITA I DOMINIK
-    //ANITA I DOMINIK
-    //ANITA I DOMINIK
-    //ANITA I DOMINIK
-    //ANITA I DOMINIK
-    //ANITA I DOMINIK
-    //ANITA I DOMINIK
-    //ANITA I DOMINIK
-    //ANITA I DOMINIK
-    //ANITA I DOMINIK
-    //ANITA I DOMINIK
-    //ANITA I DOMINIK
+
 
     @Test
     @Transactional

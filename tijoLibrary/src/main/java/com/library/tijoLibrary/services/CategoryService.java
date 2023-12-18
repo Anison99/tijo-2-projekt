@@ -9,6 +9,7 @@ import org.springframework.stereotype.Service;
 
 import javax.persistence.EntityNotFoundException;
 import java.util.List;
+import java.util.Optional;
 
 @Service
 public class CategoryService {
@@ -45,6 +46,18 @@ public class CategoryService {
         Category category = new Category();
         category.setCategoryName(categoryName);
         return categoryRepository.save(category);
+    }
+    public Category getCategoryById(Long categoryId) {
+        Optional<Category> categoryOptional = categoryRepository.findById(categoryId);
+
+        if (categoryOptional.isPresent()) {
+            return categoryOptional.get();
+        } else {
+            throw new EntityNotFoundException("Category with ID " + categoryId + " not found");
+        }
+    }
+    public List<Category> getAllCategories() {
+        return categoryRepository.findAll();
     }
 
 }

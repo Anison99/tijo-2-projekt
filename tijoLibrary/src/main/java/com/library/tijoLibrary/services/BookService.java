@@ -1,19 +1,24 @@
 package com.library.tijoLibrary.services;
 
 import com.library.tijoLibrary.models.Book;
+import com.library.tijoLibrary.models.Category;
 import com.library.tijoLibrary.models.User;
 import com.library.tijoLibrary.repositories.BookRepository;
+import com.library.tijoLibrary.repositories.CategoryRepository;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
 import javax.persistence.EntityNotFoundException;
 import java.util.Collection;
 import java.util.List;
+import java.util.Optional;
 
 @Service
 public class BookService {
     @Autowired
     private BookRepository bookRepository;
+    @Autowired
+    private CategoryRepository categoryRepository;
 
     // Dodawanie nowej książki
     public Book addBook(String author, String title) {
@@ -30,9 +35,15 @@ public class BookService {
             return bookRepository.save(newBook);
         }
         return null;
-
     }
 
+    public Book createBookWithCategory(String title, String author, String categoryName){
+        Optional<Book> book = bookRepository.findByTitle(title);
+        book.get().getId();
+        Category category = categoryRepository.findByCategoryName2(categoryName);
+        Book newBook = new Book(title, author);
+        return bookRepository.save(newBook);
+    }
     public void deleteBook(Long bookId) {
         if (bookRepository.existsById(bookId)) {
             bookRepository.deleteById(bookId);
@@ -76,6 +87,5 @@ public class BookService {
         book.setAuthor(bookDetails.getAuthor());
         return bookRepository.save(book);
     }
-
 
 }

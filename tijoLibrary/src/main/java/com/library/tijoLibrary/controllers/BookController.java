@@ -2,6 +2,7 @@ package com.library.tijoLibrary.controllers;
 
 import com.library.tijoLibrary.models.Book;
 import com.library.tijoLibrary.services.BookService;
+import com.library.tijoLibrary.services.BookStatusesService;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 
@@ -12,14 +13,22 @@ import java.util.List;
 public class BookController {
     private final BookService bookService;
 
-    public BookController(BookService bookService) {
+
+
+    public BookController(BookService bookService, BookStatusesService bookStatusesService) {
         this.bookService = bookService;
+
     }
     @PostMapping("/add")
     public ResponseEntity<Book> addBook(@RequestBody Book book) {
-        Book savedBook = bookService.addBook(book.getTitle(), book.getAuthor());
-        return ResponseEntity.ok(savedBook);
+        Book savedBook = bookService.addBook(book.getAuthor(), book.getTitle());
+        if (savedBook != null) {
+            return ResponseEntity.ok(savedBook);
+        } else {
+            return ResponseEntity.badRequest().build();
+        }
     }
+
     @GetMapping
     public ResponseEntity<List<Book>> getAllBooks() {
         List<Book> books = bookService.getAllBooks();

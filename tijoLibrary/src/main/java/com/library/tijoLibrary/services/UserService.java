@@ -8,6 +8,7 @@ import org.springframework.beans.factory.annotation.Autowired;
 //import org.springframework.security.core.userdetails.UserDetails;
 //import org.springframework.security.core.userdetails.UserDetailsService;
 //import org.springframework.security.core.userdetails.UsernameNotFoundException;
+import org.springframework.security.core.userdetails.UsernameNotFoundException;
 import org.springframework.stereotype.Service;
 
 
@@ -27,14 +28,12 @@ public class UserService{
         return userRepository.findById(userId).orElseThrow(() -> new RuntimeException("User not found"));
     }
 
-    /*
+
     // Ładowanie użytkownika po nazwie użytkownika
     public User loadUserByUsername(String username) throws UsernameNotFoundException {
         return userRepository.findByUsername(username)
                 .orElseThrow(() -> new UsernameNotFoundException("User not found with username: " + username));
     }
-
-     */
 
     // Rejestracja nowego użytkownika
     public User registerUser(String username, String password) {
@@ -114,11 +113,19 @@ public class UserService{
         return userRepository.findAll();
     }
     public User updateUser(Long userId, User userDetails) {
-        User user = getUserById(userId);
-        user.setUsername(userDetails.getUsername());
-        user.setPassword(userDetails.getPassword());
-        user.setEmail(userDetails.getEmail());
-        return userRepository.save(user);
+        User existingUser = userRepository.findById(userId)
+                .orElseThrow(() -> new EntityNotFoundException("User not found"));
+        if (userDetails.getUsername() != null && !userDetails.getUsername().isEmpty()) {
+            existingUser.setUsername(userDetails.getUsername());
+        }
+        if (userDetails.getPassword() != null && !userDetails.getPassword().isEmpty()) {
+            existingUser.setPassword(userDetails.getPassword());
+        }
+        if (userDetails.getEmail() != null && !userDetails.getEmail().isEmpty()) {
+            existingUser.setEmail(userDetails.getEmail());
+        }
+
+        return userRepository.save(existingUser);
     }
     public User loginUser(String username, String password) {
         return userRepository.findByUsername(username)

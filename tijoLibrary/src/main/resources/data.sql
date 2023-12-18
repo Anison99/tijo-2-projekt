@@ -17,7 +17,7 @@ CREATE TABLE Book (
     title VARCHAR(255),
     author VARCHAR(255),
     category_id BIGINT ,
-    isReserved BOOLEAN
+    isReserved BOOLEAN NOT NULL DEFAULT FALSE
 );
 INSERT INTO Book (title, author, isReserved) VALUES
 ('Tytuł Książki 1', 'Autor 1', FALSE),

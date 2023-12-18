@@ -1,46 +1,64 @@
 <!DOCTYPE html>
-<html lang="en">
+<html>
 <head>
     <meta charset="UTF-8">
-    <title>Login</title>
+    <title>Logowanie Użytkownika</title>
+    <link href="https://stackpath.bootstrapcdn.com/bootstrap/4.3.1/css/bootstrap.min.css" rel="stylesheet">
 </head>
+
 <body>
-<h1>Login</h1>
-<form id="loginForm">
-    <label for="username">Username:</label><br>
-    <input type="text" id="username" name="username" required><br>
-    <label for="password">Password:</label><br>
-    <input type="password" id="password" name="password" required><br>
-    <button type="submit">Login</button>
-</form>
+<div class="container mt-5">
+    <div class="row">
+        <div class="col-md-6 offset-md-3">
+            <div class="card">
+                <div class="card-body">
+                    <h2 class="card-title text-center">Logowanie Użytkownika</h2>
+                    <div id="message" class="text-center"></div>
 
+                    <form id="login-form">
+                        <div class="form-group">
+                            <label for="username">Nazwa Użytkownika:</label>
+                            <input id="username" name="username" type="text" class="form-control" required>
+                        </div>
+
+                        <div class="form-group">
+                            <label for="password">Hasło:</label>
+                            <input id="password" name="password" type="password" class="form-control" required>
+                        </div>
+
+                        <button type="submit" class="btn btn-dark rounded btn-block">Zaloguj się</button>
+                    </form>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
+
+<!-- Skrypt JavaScript -->
+<script src="https://code.jquery.com/jquery-3.5.1.min.js"></script>
 <script>
-        document.getElementById('loginForm').addEventListener('submit', function(event) {
-            event.preventDefault();
+        $(document).ready(function() {
+            $('#login-form').submit(function(event) {
+                event.preventDefault();
 
-            var username = document.getElementById('username').value;
-            var password = document.getElementById('password').value;
+                var loginData = {
+                    username: $('#username').val(),
+                    password: $('#password').val()
+                };
 
-            fetch('/api/users/login', {
-                method: 'POST',
-                headers: {
-                    'Content-Type': 'application/json'
-                },
-                body: JSON.stringify({username: username, password: password})
-            })
-            .then(response => {
-                if (response.ok) {
-                    return response.json();
-                } else {
-                    throw new Error('Login failed');
-                }
-            })
-            .then(data => {
-                console.log(data);
-                // Tutaj możesz przekierować użytkownika do innego ekranu lub zaktualizować UI
-            })
-            .catch(error => {
-                console.error('Error:', error);
+                $.ajax({
+                    url: '/api/users/login',
+                    type: 'POST',
+                    contentType: 'application/json',
+                    data: JSON.stringify(loginData),
+                    success: function(response) {
+                        alert('Logowanie zakończone sukcesem.');
+                        window.location.href = '/user-profile';
+                    },
+                    error: function(xhr, status, error) {
+                        alert('Błąd logowania: ' + xhr.responseText);
+                    }
+                });
             });
         });
     </script>

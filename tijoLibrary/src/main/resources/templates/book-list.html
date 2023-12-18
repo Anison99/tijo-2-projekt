@@ -2,9 +2,121 @@
 <html lang="en">
 <head>
     <meta charset="UTF-8">
-    <title>Title</title>
+    <title>Book List</title>
+    <link href="https://stackpath.bootstrapcdn.com/bootstrap/4.3.1/css/bootstrap.min.css" rel="stylesheet">
 </head>
-<body>
 
+<body>
+<nav class="navbar navbar-expand-lg navbar-light bg-light">
+    <a class="navbar-brand" href="#">Biblioteka</a>
+    <button class="navbar-toggler" type="button" data-toggle="collapse" data-target="#navbarNavAltMarkup" aria-controls="navbarNavAltMarkup" aria-expanded="false" aria-label="Toggle navigation">
+        <span class="navbar-toggler-icon"></span>
+    </button>
+    <div class="collapse navbar-collapse" id="navbarNavAltMarkup">
+        <div class="navbar-nav">
+            <a class="nav-item nav-link" href="home.html">Strona główna</a>
+            <a class="nav-item nav-link active" href="profile">Profil <span class="sr-only">(current)</span></a>
+            <a class="nav-item nav-link active" href="add-book">Dodaj książkę <span class="sr-only">(current)</span></a>
+            <a class="nav-item nav-link active" href="book-list">Lista książek <span class="sr-only">(current)</span></a>
+            <a class="nav-item nav-link" href="#" id="logoutButton">Wyloguj</a>
+        </div>
+    </div>
+</nav>
+
+<div class="container mt-5">
+    <h2>Lista Książek</h2>
+
+    <!-- Book List -->
+    <table class="table mt-3">
+        <thead>
+        <tr>
+            <th>Tytuł</th>
+            <th>Autor</th>
+            <th>Dostępność</th>
+            <th>Operacje</th>
+        </tr>
+        </thead>
+        <tbody id="bookList">
+        <!-- Books will be dynamically added here -->
+        </tbody>
+    </table>
+</div>
+
+<!-- Bootstrap JS -->
+<script src="https://code.jquery.com/jquery-3.5.1.min.js"></script>
+<script src="https://maxcdn.bootstrapcdn.com/bootstrap/4.5.2/js/bootstrap.min.js"></script>
+<script>
+    $(document).ready(function () {
+        function loadBooks() {
+            $.ajax({
+                url: '/api/books',
+                type: 'GET',
+                success: function (books) {
+                    var bookList = $('#bookList');
+                    bookList.empty();
+
+                    // Iterate through books and display them
+                    books.forEach(function (book) {
+                        var row = $('<tr>');
+                        row.append($('<td>', { text: book.title }));
+                        row.append($('<td>', { text: book.author }));
+                        row.append($('<td>', { text: book.isReserved ? 'Niedostępna' : 'Dostępna' }));
+
+                        // Create buttons for operations
+                        var operations = $('<div>');
+                        if (!book.isReserved) {
+                            operations.append($('<button>', {
+                                text: 'Rezerwuj',
+                                class: 'btn btn-primary reserve-button', // Dodaj klasę reserve-button
+                                // Dodaj atrybut data-book-id z identyfikatorem książki
+                                'data-book-id': book.id,
+                            }));
+                        }
+                        if (book.isReserved) {
+                            operations.append($('<button>', {
+                                text: 'Dodaj do Oczekujących',
+                                class: 'btn btn-warning',
+                                click: function () {
+                                    // Implement adding to waiting list logic here
+                                    alert('Added to Waiting List: ' + book.title);
+                                }
+                            }));
+                        }
+                        row.append($('<td>').append(operations));
+
+                        bookList.append(row);
+                    });
+                },
+                error: function (error) {
+                    alert('Error loading books');
+                }
+            });
+        }
+
+        // Load books initially
+        loadBooks();
+
+        // Obsługa kliknięcia przycisku rezerwacji
+        $('#bookList').on('click', '.reserve-button', function () {
+            var bookId = $(this).data('book-id'); // Pobierz identyfikator książki z atrybutu data-book-id
+            $.ajax({
+                url: '/api/books/reserve/' + bookId,
+                type: 'POST',
+                success: function (book) {
+                    // Tutaj możesz zaktualizować interfejs użytkownika, aby oznaczyć książkę jako zarezerwowaną.
+                    alert('Book reserved: ' + book.title);
+                    loadBooks(); // Po rezerwacji odśwież listę książek
+                },
+                error: function (error) {
+                    alert('Error reserving book');
+                }
+            });
+        });
+
+        $('#logoutButton').click(function() {
+            window.location.href = '/';
+        });
+    });
+</script>
 </body>
 </html>

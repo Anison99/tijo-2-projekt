@@ -1,5 +1,6 @@
 package com.library.tijoLibrary.models;
 
+import com.library.tijoLibrary.services.CategoryService;
 import javax.persistence.*;
 
 @Entity
@@ -9,10 +10,10 @@ public class Book {
     private Long id;
     private String title;
     private String author;
-    private boolean isReserved;
     @ManyToOne
     @JoinColumn(name = "category_id")
     private Category category;
+    private boolean isReserved;
     public Book() {
     }
 
@@ -51,6 +52,7 @@ public class Book {
         isReserved = reserved;
     }
 
+
     public int getAverageRating() {
         return 0;
     }
@@ -62,4 +64,18 @@ public class Book {
     public void setCategory(Category category) {
         this.category = category;
     }
+    public void setCategoryById(Long categoryId, CategoryService categoryService) {
+
+        if (categoryId != null) {
+            Category category = categoryService.getCategoryById(categoryId);
+            if (category != null) {
+                this.category = category;
+            } else {
+                throw new IllegalArgumentException("Category with ID " + categoryId + " not found");
+            }
+        } else {
+            throw new IllegalArgumentException("categoryId cannot be null");
+        }
+    }
+
 }
