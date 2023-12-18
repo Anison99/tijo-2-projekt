@@ -1,5 +1,5 @@
 # Kurs: Testowanie i Jakość Oprogramowania (Projekt)
-#UWAGA - najaktualniejsza wersja znajduje się w gałęzi `develop`
+# UWAGA - najaktualniejsza wersja znajduje się w gałęzi `develop`
 
 ### Autorzy: Damian Majka, Dominik Kiwior, Anita Zych
 ### Temat: Aplikacja do zarządzania wirtualną biblioteką
