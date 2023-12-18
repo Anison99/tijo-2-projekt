@@ -19,7 +19,6 @@ import java.util.*;
 import static org.mockito.Mockito.when;
 
 public class LibraryUnitTests {
-
     @InjectMocks
     UserService userService;
 
@@ -39,7 +38,6 @@ public class LibraryUnitTests {
     private BookStatusesService bookStatusesService;
     @Mock
     private CategoryRepository categoryRepository;
-
     @InjectMocks
     private CategoryService categoryService;
     @Mock

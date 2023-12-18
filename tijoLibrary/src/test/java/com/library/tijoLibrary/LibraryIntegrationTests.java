@@ -272,7 +272,6 @@ public class LibraryIntegrationTests {
 
         assertFalse(ratingRepository.existsById(rating.getId()));
     }
-
     @Test
     @Transactional
     void testWhenDeleteReview_thenShouldRemoveReview() {
@@ -381,8 +380,6 @@ public class LibraryIntegrationTests {
         User finalUser = user;
         assertTrue(ratings.stream().allMatch(rating -> rating.getUser().getId().equals(finalUser.getId())));
     }
-
-    // Test dla wyświetlania wszystkich Rating dla podanej książki
     @Test
     @Transactional
     void testWhenGetRatingsForBook_thenShouldReturnRatings() {

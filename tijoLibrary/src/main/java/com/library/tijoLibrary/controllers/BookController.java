@@ -13,8 +13,6 @@ import java.util.List;
 public class BookController {
     private final BookService bookService;
 
-
-
     public BookController(BookService bookService, BookStatusesService bookStatusesService) {
         this.bookService = bookService;
 
@@ -49,7 +47,6 @@ public class BookController {
         bookService.deleteBook(id);
         return ResponseEntity.ok().build();
     }
-    // Dodaj ten endpoint w BookController
     @PostMapping("/reserve/{id}")
     public ResponseEntity<Book> reserveBook(@PathVariable Long id) {
         Book book = bookService.reserveBook(id);
@@ -59,5 +56,4 @@ public class BookController {
             return ResponseEntity.badRequest().build();
         }
     }
-
 }

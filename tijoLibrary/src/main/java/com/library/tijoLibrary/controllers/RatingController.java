@@ -32,16 +32,6 @@ public class RatingController {
                     ratingRequest.getReview()
             );
 
-            // Dodanie recenzji, jeśli istnieje
-          /*  if (ratingRequest.getReview() != null && !ratingRequest.getReview().trim().isEmpty()) {
-                ratingService.addReview(
-                        ratingRequest.getUserId(),
-                        ratingRequest.getBookId(),
-                        ratingRequest.getReview()
-                );
-            }
-
-           */
             return ResponseEntity.ok(rating);
         } catch (EntityNotFoundException e) {
             return ResponseEntity.notFound().build();

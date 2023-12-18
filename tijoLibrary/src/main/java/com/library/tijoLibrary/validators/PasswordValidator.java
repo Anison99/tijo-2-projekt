@@ -15,5 +15,4 @@ public class PasswordValidator {
     public boolean passwordMatches(@NotNull String rawPassword, @NotNull String hashedPassword) {
         return BCrypt.checkpw(rawPassword, hashedPassword);
     }
-
 }

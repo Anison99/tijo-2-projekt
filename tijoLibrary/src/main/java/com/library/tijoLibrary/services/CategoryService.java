@@ -19,7 +19,6 @@ public class CategoryService {
     @Autowired
     private CategoryRepository categoryRepository;
 
-    // Przypisanie kategorii do książki
     public void assignCategoryToBook(Long bookId, Long categoryId) {
         Book book = bookRepository.findById(bookId)
                 .orElseThrow(() -> new EntityNotFoundException("Book with ID " + bookId + " not found"));
@@ -30,12 +29,9 @@ public class CategoryService {
         bookRepository.save(book);
     }
 
-    // Wyszukanie książek po kategorii
     public List<Book> findBooksByCategory(Long categoryId) {
         return bookRepository.findByCategoryId(categoryId);
     }
-
-    // Wyszukanie kategorii danej książki
     public Category getCategoryOfBook(Long bookId) {
         Book book = bookRepository.findById(bookId)
                 .orElseThrow(() -> new EntityNotFoundException("Book with ID " + bookId + " not found"));
@@ -59,5 +55,4 @@ public class CategoryService {
     public List<Category> getAllCategories() {
         return categoryRepository.findAll();
     }
-
 }

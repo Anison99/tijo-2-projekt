@@ -23,8 +23,6 @@ public class EmailValidatorTests {
         assertFalse(validator.isValid(""));
     }
 
-    // ----------------------- DODANE TESTY --------------------
-
     @Test
     public void testEmailWithoutAtSymbol() {
         assertFalse(validator.isValid("emailWithoutAtSymbol.com"));

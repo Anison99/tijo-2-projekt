@@ -20,7 +20,6 @@ public class BookService {
     @Autowired
     private CategoryRepository categoryRepository;
 
-    // Dodawanie nowej książki
     public Book addBook(String author, String title) {
         if(author != null
                 && author != ""
@@ -51,26 +50,20 @@ public class BookService {
             throw new EntityNotFoundException("Book with ID " + bookId + " not found");
         }
     }
-
-    // Sprawdzenie czy książka istnieje
     public boolean checkBookExists(Long bookId) {
         return bookRepository.existsById(bookId);
     }
 
-    // Wyświetlenie wszystkich książek
     public List<Book> getAllBooks() {
         return bookRepository.findAll();
     }
 
-    // Zmiana tytułu książki
     public void updateBookTitle(Long bookId, String newTitle) {
         Book book = bookRepository.findById(bookId)
                 .orElseThrow(() -> new EntityNotFoundException("Book with ID " + bookId + " not found"));
         book.setTitle(newTitle);
         bookRepository.save(book);
     }
-
-    // Zmiana autora książki
     public void updateBookAuthor(Long bookId, String newAuthor) {
         Book book = bookRepository.findById(bookId)
                 .orElseThrow(() -> new EntityNotFoundException("Book with ID " + bookId + " not found"));
@@ -87,7 +80,6 @@ public class BookService {
         book.setAuthor(bookDetails.getAuthor());
         return bookRepository.save(book);
     }
-    // Dodaj tę metodę w BookService
     public Book reserveBook(Long id) {
         Book book = bookRepository.findById(id)
                 .orElseThrow(() -> new EntityNotFoundException("Book not found"));
