@@ -87,5 +87,13 @@ public class BookService {
         book.setAuthor(bookDetails.getAuthor());
         return bookRepository.save(book);
     }
+    // Dodaj tę metodę w BookService
+    public Book reserveBook(Long id) {
+        Book book = bookRepository.findById(id)
+                .orElseThrow(() -> new EntityNotFoundException("Book not found"));
+        book.setReserved(true);
+        return bookRepository.save(book);
+    }
+
 
 }

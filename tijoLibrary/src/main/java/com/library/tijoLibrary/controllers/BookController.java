@@ -49,4 +49,15 @@ public class BookController {
         bookService.deleteBook(id);
         return ResponseEntity.ok().build();
     }
+    // Dodaj ten endpoint w BookController
+    @PostMapping("/reserve/{id}")
+    public ResponseEntity<Book> reserveBook(@PathVariable Long id) {
+        Book book = bookService.reserveBook(id);
+        if (book != null) {
+            return ResponseEntity.ok(book);
+        } else {
+            return ResponseEntity.badRequest().build();
+        }
+    }
+
 }
