@@ -1,0 +1,242 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <title>Ocena Książek</title>
+    <link href="https://stackpath.bootstrapcdn.com/bootstrap/4.3.1/css/bootstrap.min.css" rel="stylesheet">
+</head>
+<body>
+<nav class="navbar navbar-expand-lg navbar-light bg-light">
+    <a class="navbar-brand" href="#">Biblioteka</a>
+    <button class="navbar-toggler" type="button" data-toggle="collapse" data-target="#navbarNavAltMarkup"
+            aria-controls="navbarNavAltMarkup" aria-expanded="false" aria-label="Toggle navigation">
+        <span class="navbar-toggler-icon"></span>
+    </button>
+    <div class="collapse navbar-collapse" id="navbarNavAltMarkup">
+        <div class="navbar-nav">
+            <a class="nav-item nav-link" href="home.html">Strona główna</a>
+            <a class="nav-item nav-link active" href="profile">Profil <span class="sr-only">(current)</span></a>
+            <a class="nav-item nav-link active" href="add-book">Dodaj książkę <span class="sr-only">(current)</span></a>
+            <a class="nav-item nav-link active" href="book-list">Lista książek <span
+                    class="sr-only">(current)</span></a>
+            <a class="nav-item nav-link active" href="book-rating">Oceny <span class="sr-only">(current)</span></a>
+            <a class="nav-item nav-link" href="#" id="logoutButton">Wyloguj</a>
+        </div>
+    </div>
+</nav>
+<div class="container mt-5">
+    <h2>Oceń Książkę</h2>
+
+    <!-- Formularz Oceny Książki -->
+    <form id="ratingForm">
+        <div class="form-group">
+            <label for="bookSelect">Wybierz Książkę</label>
+            <select class="form-control" id="bookSelect">
+                <!-- Opcje książek zostaną załadowane tutaj -->
+            </select>
+        </div>
+        <div class="form-group">
+            <label for="ratingInput">Ocena (1-10)</label>
+            <input type="number" class="form-control" id="ratingInput" min="1" max="10">
+        </div>
+        <div class="form-group">
+            <label for="reviewInput">Recenzja</label>
+            <textarea class="form-control" id="reviewInput"></textarea>
+        </div>
+        <button type="submit" class="btn btn-primary">Zapisz Oceny</button>
+    </form>
+    <h2>Twoje Recenzje</h2>
+    <table class="table">
+        <thead>
+        <tr>
+            <th>Książka</th>
+            <th>Ocena</th>
+            <th>Recenzja</th>
+            <th>Akcje</th>
+        </tr>
+        </thead>
+        <tbody id="userRatingsTable">
+        <!-- Recenzje użytkownika zostaną załadowane tutaj -->
+        </tbody>
+    </table>
+    <!-- Modal do Edycji Recenzji -->
+    <div class="modal fade" id="editRatingModal" tabindex="-1" role="dialog" aria-labelledby="editRatingModalLabel"
+         aria-hidden="true">
+        <div class="modal-dialog" role="document">
+            <div class="modal-content">
+                <div class="modal-header">
+                    <h5 class="modal-title" id="editRatingModalLabel">Edytuj Recenzję</h5>
+                    <button type="button" class="close" data-dismiss="modal" aria-label="Close">
+                        <span aria-hidden="true">&times;</span>
+                    </button>
+                </div>
+                <div class="modal-body">
+                    <form id="edit-rating-form">
+                        <input type="hidden" id="edit-rating-id">
+                        <div class="form-group">
+                            <label for="edit-rating">Ocena:</label>
+                            <input type="number" id="edit-rating" class="form-control" min="1" max="10">
+                        </div>
+                        <div class="form-group">
+                            <label for="edit-review">Recenzja:</label>
+                            <textarea id="edit-review" class="form-control"></textarea>
+                        </div>
+                        <button type="submit" class="btn btn-primary">Zapisz Zmiany</button>
+                    </form>
+                </div>
+            </div>
+        </div>
+    </div>
+
+</div>
+
+
+<script src="https://code.jquery.com/jquery-3.5.1.min.js"></script>
+<script src="https://maxcdn.bootstrapcdn.com/bootstrap/4.5.2/js/bootstrap.min.js"></script>
+<script>
+    $(document).ready(function () {
+        loadBooks();
+
+        // Ładowanie dostępnych książek
+        function loadBooks() {
+            $.ajax({
+                url: '/api/books',
+                type: 'GET',
+                success: function (books) {
+                    var bookSelect = $('#bookSelect');
+                    bookSelect.empty();
+                    books.forEach(function (book) {
+                        bookSelect.append($('<option>', {
+                            value: book.id,
+                            text: book.title + " - " + book.author
+                        }));
+                    });
+                },
+                error: function () {
+                    alert('Błąd ładowania książek');
+                }
+            });
+        }
+        function loadUserRatings() {
+    var userId = localStorage.getItem('userId');
+    $.ajax({
+        url: '/api/ratings/user/' + userId,
+        type: 'GET',
+        success: function (ratings) {
+            var userRatingsTable = $('#userRatingsTable');
+            userRatingsTable.empty();
+            ratings.forEach(function (rating) {
+                userRatingsTable.append(createRatingRow(rating));
+            });
+        },
+        error: function () {
+            alert('Błąd ładowania recenzji');
+        }
+    });
+}
+
+function createRatingRow(rating) {
+    var row = $('<tr>');
+    row.append($('<td>').text(rating.book.title));
+    row.append($('<td>').text(rating.rating));
+    row.append($('<td>').text(rating.review));
+    var actions = $('<td>');
+    actions.append($('<button>').addClass('btn btn-primary btn-sm').text('Edytuj').click(function() { editRating(rating); }));
+    actions.append($('<button>').addClass('btn btn-danger btn-sm').text('Usuń').click(function() { deleteRating(rating.id); }));
+    row.append(actions);
+    return row;
+}
+
+    function editRating(rating) {
+    // Ustawienie wartości w formularzu modalnym
+    $('#edit-rating-id').val(rating.id);
+    $('#edit-rating').val(rating.rating);
+    $('#edit-review').val(rating.review);
+
+    // Wyświetlenie formularza modalnego
+    $('#editRatingModal').modal('show');
+}
+
+function deleteRating(ratingId) {
+    if (confirm('Czy na pewno chcesz usunąć tę recenzję?')) {
+        $.ajax({
+            url: '/api/ratings/' + ratingId,
+            type: 'DELETE',
+            success: function () {
+                alert('Recenzja została usunięta.');
+                loadUserRatings();
+            },
+            error: function () {
+                alert('Wystąpił błąd podczas usuwania recenzji.');
+            }
+        });
+    }
+}
+
+    loadUserRatings();
+
+        // Obsługa wysyłania formularza
+        $('#ratingForm').submit(function (event) {
+    event.preventDefault();
+    var userId = localStorage.getItem('userId');
+    var bookId = $('#bookSelect').val();
+    var rating = parseInt($('#ratingInput').val(), 10);
+    var review = $('#reviewInput').val();
+
+    var ratingData = {
+        userId: userId,
+        bookId: bookId,
+        rating: rating,
+        review: review
+    };
+
+    $.ajax({
+        url: '/api/ratings/add',
+        type: 'POST',
+        contentType: 'application/json',
+        data: JSON.stringify(ratingData),
+        success: function (response) {
+            alert('Ocena zapisana: ' + rating + ' Recenzja: ' + review);
+            $('#ratingInput').val('');
+            $('#reviewInput').val('');
+        },
+        error: function (error) {
+            alert('Wystąpił błąd podczas zapisywania oceny i recenzji');
+        }
+    });
+});
+$('#edit-rating-form').submit(function(event) {
+    event.preventDefault();
+
+    var ratingId = $('#edit-rating-id').val();
+    var updatedRating = {
+        rating: $('#edit-rating').val(),
+        review: $('#edit-review').val()
+    };
+
+    // Wysyłanie żądania AJAX do edycji recenzji
+    $.ajax({
+        url: '/api/ratings/' + ratingId,
+        type: 'PUT',
+        contentType: 'application/json',
+        data: JSON.stringify(updatedRating),
+        success: function(response) {
+            $('#editRatingModal').modal('hide');
+            alert('Recenzja została zaktualizowana.');
+            // Tutaj możesz odświeżyć listę recenzji
+        },
+        error: function(error) {
+            alert('Wystąpił błąd podczas edytowania recenzji.');
+        }
+    });
+});
+    });
+        $('#logoutButton').click(function() {
+            window.location.href = '/';
+        });
+    });
+
+
+</script>
+</body>
+</html>

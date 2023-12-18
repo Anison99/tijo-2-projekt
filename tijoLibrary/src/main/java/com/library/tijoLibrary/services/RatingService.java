@@ -85,6 +85,19 @@ public class RatingService {
         rating.setReview(null); // Usunięcie recenzji poprzez ustawienie na null
         ratingRepository.save(rating);
     }
+    public Rating addRatingandReview(Long userId, Long bookId, int ratingValue, String review) {
+        User user = userRepository.findById(userId)
+                .orElseThrow(() -> new EntityNotFoundException("User with ID " + userId + " not found"));
+        Book book = bookRepository.findById(bookId)
+                .orElseThrow(() -> new EntityNotFoundException("Book with ID " + bookId + " not found"));
+
+        Rating rating = new Rating();
+        rating.setUser(user);
+        rating.setBook(book);
+        rating.setRating(ratingValue);
+        rating.setReview(review);
+        return ratingRepository.save(rating);
+    }
 
     // Pobranie recenzji dla książki
     public List<Rating> getReviewsForBook(Long bookId) {
