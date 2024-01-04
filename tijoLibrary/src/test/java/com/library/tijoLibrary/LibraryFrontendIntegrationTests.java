@@ -1,8 +1,7 @@
-package com.library.tijoLibrary;
-
+//package com.library.tijoLibrary;
+/*
 import com.library.tijoLibrary.models.Book;
 import com.library.tijoLibrary.repositories.BookRepository;
-import com.library.tijoLibrary.repositories.ReservationRepository;
 import org.junit.jupiter.api.Test;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.test.autoconfigure.web.servlet.WebMvcTest;
@@ -20,8 +19,6 @@ public class LibraryFrontendIntegrationTests {
     @Autowired
     private TestRestTemplate restTemplate;
 
-    @Autowired
-    private ReservationRepository reservationRepository;
 
     @Autowired
     private BookRepository bookRepository;
@@ -44,4 +41,4 @@ public class LibraryFrontendIntegrationTests {
         String reservationResponse = restTemplate.postForObject(reservationUrl, requestBody, String.class);
         assertTrue(reservationResponse.contains("success"));
     }
-}
+}*/

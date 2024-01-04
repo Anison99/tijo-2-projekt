@@ -1,0 +1,237 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <title>Book List</title>
+    <link href="https://stackpath.bootstrapcdn.com/bootstrap/4.3.1/css/bootstrap.min.css" rel="stylesheet">
+</head>
+
+<body>
+<nav class="navbar navbar-expand-lg navbar-light bg-light">
+    <a class="navbar-brand" href="#">Biblioteka</a>
+    <button class="navbar-toggler" type="button" data-toggle="collapse" data-target="#navbarNavAltMarkup" aria-controls="navbarNavAltMarkup" aria-expanded="false" aria-label="Toggle navigation">
+        <span class="navbar-toggler-icon"></span>
+    </button>
+    <div class="collapse navbar-collapse" id="navbarNavAltMarkup">
+        <div class="navbar-nav">
+            <a class="nav-item nav-link" href="home.html">Strona główna</a>
+            <a class="nav-item nav-link active" href="user-profile">Profil <span class="sr-only">(current)</span></a>
+            <a class="nav-item nav-link active" href="add-book">Dodaj książkę <span class="sr-only">(current)</span></a>
+            <a class="nav-item nav-link active" href="book-list">Lista książek <span class="sr-only">(current)</span></a>
+            <a class="nav-item nav-link active" href="book-rating">Oceny <span class="sr-only">(current)</span></a>
+            <a class="nav-item nav-link" href="#" id="logoutButton">Wyloguj</a>
+        </div>
+    </div>
+</nav>
+
+<div class="container mt-5">
+    <h2>Lista Książek</h2>
+    <div class="form-group">
+        <input type="text" class="form-control" id="searchInput" placeholder="Wyszukaj po tytule lub autorze">
+    </div>
+
+    <!-- Book List -->
+    <table class="table mt-3">
+        <thead>
+        <tr>
+            <th>Tytuł</th>
+            <th>Autor</th>
+            <th>Dostępność</th>
+            <th>Operacje</th>
+        </tr>
+        </thead>
+        <tbody id="bookList">
+        <!-- Books will be dynamically added here -->
+        </tbody>
+    </table>
+</div>
+<!-- Modal do Edycji Książki -->
+<div class="modal fade" id="editBookModal" tabindex="-1" role="dialog" aria-labelledby="editBookModalLabel" aria-hidden="true">
+    <div class="modal-dialog" role="document">
+        <div class="modal-content">
+            <div class="modal-header">
+                <h5 class="modal-title" id="editBookModalLabel">Edytuj Książkę</h5>
+                <button type="button" class="close" data-dismiss="modal" aria-label="Close">
+                    <span aria-hidden="true">&times;</span>
+                </button>
+            </div>
+            <div class="modal-body">
+                <form>
+                    <div class="form-group">
+                        <label for="bookTitle">Tytuł</label>
+                        <input type="text" class="form-control" id="bookTitle">
+                    </div>
+                    <div class="form-group">
+                        <label for="bookAuthor">Autor</label>
+                        <input type="text" class="form-control" id="bookAuthor">
+                    </div>
+                    <input type="hidden" id="bookId">
+                </form>
+            </div>
+            <div class="modal-footer">
+                <button type="button" class="btn btn-secondary" data-dismiss="modal">Anuluj</button>
+                <button type="button" class="btn btn-primary" id="saveBookChanges">Zapisz Zmiany</button>
+            </div>
+        </div>
+    </div>
+</div>
+
+<!-- Bootstrap JS -->
+<script src="https://code.jquery.com/jquery-3.5.1.min.js"></script>
+<script src="https://maxcdn.bootstrapcdn.com/bootstrap/4.5.2/js/bootstrap.min.js"></script>
+<script>
+    $(document).ready(function () {
+function loadBooks() {
+    $.ajax({
+        url: '/api/books',
+        type: 'GET',
+        success: function (books) {
+            var bookList = $('#bookList');
+            bookList.empty();
+
+            // Iterate through books and display them
+            books.forEach(function (book) {
+                var row = $('<tr>');
+                row.append($('<td>', { text: book.title }));
+                row.append($('<td>', { text: book.author }));
+                row.append($('<td>', { text: book.isReserved ? 'Niedostępna' : 'Dostępna' }));
+
+                // Create buttons for operations
+                var operations = $('<td>');
+
+                // Reserve button
+                var reserveButton = $('<button>', {
+                    text: book.isReserved ? 'Dodaj do Oczekujących' : 'Rezerwuj',
+                    class: 'btn ' + (book.isReserved ? 'btn-warning' : 'btn-primary'),
+                    'data-book-id': book.id,
+                    click: function () {
+                        if (!book.isReserved) {
+                            reserveBook($(this), book.id);
+                        } else {
+                            alert('Added to Waiting List: ' + book.title);
+                        }
+                    }
+                });
+                operations.append(reserveButton);
+
+                // Edit button
+                var editButton = $('<button>', {
+                    text: 'Edytuj',
+                    class: 'btn btn-info ml-2',
+                    'data-book-id': book.id,
+                    click: function () {
+                        editBook(book.id);
+                    }
+                });
+                operations.append(editButton);
+
+                // Delete button
+                var deleteButton = $('<button>', {
+                    text: 'Usuń',
+                    class: 'btn btn-danger ml-2',
+                    'data-book-id': book.id,
+                    click: function () {
+                        deleteBook(book.id, $(this).closest('tr'));
+                    }
+                });
+                operations.append(deleteButton);
+
+                row.append(operations);
+                bookList.append(row);
+            });
+        },
+        error: function (error) {
+            alert('Error loading books');
+        }
+    });
+}
+
+        function reserveBook(button, bookId) {
+            $.ajax({
+                url: '/api/books/reserve/' + bookId,
+                type: 'POST',
+                success: function (book) {
+                    alert('Book reserved: ' + book.title);
+                    button.text('Dodaj do Oczekujących').removeClass('btn-primary').addClass('btn-warning');
+                    button.closest('tr').find('td:nth-child(3)').text('Niedostępna');
+                },
+                error: function (error) {
+                    alert('Error reserving book');
+                }
+            });
+        }
+
+        function deleteBook(bookId, row) {
+            if (confirm('Czy na pewno chcesz usunąć tę książkę?')) {
+                $.ajax({
+                    url: '/api/books/' + bookId,
+                    type: 'DELETE',
+                    success: function () {
+                        alert('Book deleted');
+                        row.remove();
+                    },
+                    error: function (error) {
+                        alert('Error deleting book');
+                    }
+                });
+            }
+        }
+        function editBook(bookId) {
+    // Pobierz dane książki z serwera
+    $.ajax({
+        url: '/api/books/' + bookId,
+        type: 'GET',
+        success: function(book) {
+            // Wypełnij formularz modalny danymi książki
+            $('#editBookModal #bookTitle').val(book.title);
+            $('#editBookModal #bookAuthor').val(book.author);
+            $('#editBookModal #bookId').val(book.id);
+
+            // Wyświetl modal
+            $('#editBookModal').modal('show');
+        },
+        error: function(error) {
+            alert('Error fetching book details');
+        }
+    });
+
+    // Obsługa zapisywania zmian po kliknięciu przycisku zapisu w modalu
+    $('#saveBookChanges').off('click').on('click', function() {
+        var updatedBook = {
+            title: $('#editBookModal #bookTitle').val(),
+            author: $('#editBookModal #bookAuthor').val()
+        };
+
+        $.ajax({
+            url: '/api/books/' + bookId,
+            type: 'PUT',
+            contentType: 'application/json',
+            data: JSON.stringify(updatedBook),
+            success: function(book) {
+                $('#editBookModal').modal('hide');
+                loadBooks(); // odśwież listę książek
+                alert('Book updated successfully');
+            },
+            error: function(error) {
+                alert('Error updating book');
+            }
+        });
+    });
+}
+
+        // Load books initially
+        loadBooks();
+         $('#searchInput').on('keyup', function() {
+        var value = $(this).val().toLowerCase();
+        $('#bookList tr').filter(function() {
+            $(this).toggle($(this).text().toLowerCase().indexOf(value) > -1);
+        });
+    });
+        $('#logoutButton').click(function() {
+            window.location.href = '/';
+        });
+
+    });
+</script>
+</body>
+</html>

@@ -1,9 +1,7 @@
 package com.library.tijoLibrary.models;
 
-import javax.persistence.Entity;
-import javax.persistence.GeneratedValue;
-import javax.persistence.GenerationType;
-import javax.persistence.Id;
+import com.library.tijoLibrary.services.CategoryService;
+import javax.persistence.*;
 
 @Entity
 public class Book {
@@ -12,9 +10,14 @@ public class Book {
     private Long id;
     private String title;
     private String author;
+    @ManyToOne
+    @JoinColumn(name = "category_id")
+    private Category category;
     private boolean isReserved;
+    public Book() {
+    }
 
-    public Book(String title, String author, String isbn) {
+    public Book(String title, String author) {
     }
 
     public Long getId() {
@@ -49,11 +52,30 @@ public class Book {
         isReserved = reserved;
     }
 
-    public String getStatus() {
-        return null;
+
+    public int getAverageRating() {
+        return 0;
     }
 
-    public User getReservedBy() {
-        return null;
+    public Category getCategory() {
+        return category;
     }
+
+    public void setCategory(Category category) {
+        this.category = category;
+    }
+    public void setCategoryById(Long categoryId, CategoryService categoryService) {
+
+        if (categoryId != null) {
+            Category category = categoryService.getCategoryById(categoryId);
+            if (category != null) {
+                this.category = category;
+            } else {
+                throw new IllegalArgumentException("Category with ID " + categoryId + " not found");
+            }
+        } else {
+            throw new IllegalArgumentException("categoryId cannot be null");
+        }
+    }
+
 }

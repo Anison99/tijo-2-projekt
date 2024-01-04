@@ -1,20 +1,21 @@
 package com.library.tijoLibrary.models;
 
-import javax.persistence.Entity;
-import javax.persistence.GeneratedValue;
-import javax.persistence.GenerationType;
-import javax.persistence.Id;
+import javax.persistence.*;
 
 @Entity
 public class User {
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     private Long id;
+
+    @Column(name = "username", nullable = false)
     private String username;
+
+    @Column(name = "password", nullable = false)
     private String password;
 
-    public User(String username) {
-    }
+    @Column(name = "email")
+    private String email;
 
     public Long getId() {
         return id;
@@ -40,10 +41,11 @@ public class User {
         this.password = password;
     }
 
-    public User orElse(Object o) {
-        return null;
+    public String getEmail() {
+        return email;
     }
 
-    public void setEmail(String mail) {
+    public void setEmail(String email) {
+        this.email = email;
     }
 }
