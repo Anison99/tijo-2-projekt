@@ -1,18 +1,41 @@
 # Kurs: Testowanie i Jakość Oprogramowania (Projekt)
-# UWAGA - najaktualniejsza wersja znajduje się w gałęzi `develop`
+# UWAGA - najaktualniejsza wersja znajduje się w gałęzi `main`
 
 ### Autorzy: Damian Majka, Dominik Kiwior, Anita Zych
 ### Temat: Aplikacja do zarządzania wirtualną biblioteką
 ### Opis projektu:
-Nasza aplikacja ma na celu zarządzanie zasobami wirtualnej biblioteki, umożliwiając użytkownikom wyszukiwanie, rezerwację, wypożyczanie oraz sprawdzenie dostępności książek. Można utworzyć nowe konto użytkownika, zalogować się do istniejacego konta. Z panelu zarządzania biblioteką można dodąc do bazy nowe konto (rejestracja).
+Nasza aplikacja ma na celu zarządzanie zasobami wirtualnej biblioteki, umożliwiając użytkownikom wyszukiwanie, rezerwację, wypożyczanie, dodadnie ocen do książek i ich recenzji oraz sprawdzenie dostępności książek. Można utworzyć nowe konto użytkownika, zalogować się do istniejacego konta.
 
 ## Uruchomienie testów jednostkowych i integracyjnych
 - sklonuj repozytorium do folderu na swoim urządzeniu
 - przejdź do scieżki [twoja_ścieżka_do_projektu]\tijoLibrary
 - uruchom komendę `mvn test`
+  
+## Uruchomienie apliakcji
+- sklonuj repozytorium do folderu na swoim urządzeniu
+- przejdź do scieżki [twoja_ścieżka_do_projektu]\tijoLibrary
+- uruchom komendę `mvn spring-boot:run`
+- wpisz w okno przeglądarki `localhost:5000` (domyślny port aplikacji to 5000)
+
+## Dokumentacja API
+- sklonuj repozytorium do folderu na swoim urządzeniu
+- przejdź do scieżki [twoja_ścieżka_do_projektu]\tijoLibrary
+- uruchom komendę `mvn spring-boot:run` aby rozpocząc działanie apliakcji
+- w oknie przeglądarki wpisz `http://localhost:5000/swagger-ui/` (domyślny port aplikacji to 5000)
+
+## Technologie użyte w projekcie
+- Spring Boot
+- Spring Data JPA
+- Spring Data REST
+- Hibernate
+- H2 Database
+- Spring Security
+- Thymeleaf
+- Swagger (Springfox)
+- Java (17)
+- Maven
 
 ## Scenariusze testowe dla testera manualnego 
-
 
 ### 1. Scenariusz testowy: Proces dodawania nowej książki  
 
@@ -24,7 +47,6 @@ Nasza aplikacja ma na celu zarządzanie zasobami wirtualnej biblioteki, umożliw
 
 - Krok 4: Zweryfikuj obecność nowej pozycji w katalogu.  
 
-
 ### 2. Scenariusz testowy: Proces usuwania książki  
 
 - Krok 1: Zaloguj się do systemu biblioteki.  
@@ -35,7 +57,6 @@ Nasza aplikacja ma na celu zarządzanie zasobami wirtualnej biblioteki, umożliw
 
 - Krok 4: Sprawdź, czy książka została usunięta z katalogu i czy wszelkie rezerwacje zostały anulowane.  
 
-
 ### 3 .Scenarusz testowy: Proces rezerwacji książki  
 
 - Krok 1: Zaloguj się na konto użytkownika.  
@@ -45,7 +66,6 @@ Nasza aplikacja ma na celu zarządzanie zasobami wirtualnej biblioteki, umożliw
 - Krok 3: Rezerwuj książkę i sprawdź potwierdzenie rezerwacji.  
 
 - Krok 4: Zweryfikuj, czy status książki zmienił się na "zarezerwowana".  
-
  
 ### 4.Scenariusz testowy :  Usuwanie użytkownika z bazy danych 
 
@@ -57,7 +77,6 @@ Nasza aplikacja ma na celu zarządzanie zasobami wirtualnej biblioteki, umożliw
 
 - Krok 4 : Potwierdzenie usunięcia 
 
-
 ### 5.Scenariusz testowy: Sprawdzanie historii wypożyczeń  
 
 - Krok 1: Zaloguj się na konto użytkownika.  
@@ -65,7 +84,6 @@ Nasza aplikacja ma na celu zarządzanie zasobami wirtualnej biblioteki, umożliw
 - Krok 2: Przejdź do sekcji historii wypożyczeń.  
 
 - Krok 3: Zweryfikuj, czy wyświetlane są wszystkie poprzednie wypożyczenia i rezerwacje, zarówno udane, jak i anulowane.  
-
  
 ### 6.Scenariusz testowy: Logowanie z błędnym loginem  
 
@@ -75,7 +93,6 @@ Nasza aplikacja ma na celu zarządzanie zasobami wirtualnej biblioteki, umożliw
 
 - Krok 3: Zweryfikuj, czy nie ma możliwości logowania przy podaniu złego loginu  
 
- 
 ### 7.Scenariusz testowy: Logowanie z błędnym hasłem  
 
 - Krok 1: Wpisz login  
@@ -83,7 +100,6 @@ Nasza aplikacja ma na celu zarządzanie zasobami wirtualnej biblioteki, umożliw
 - Krok 2: Wpisz błędne hasło  
 
 - Krok 3: Zweryfikuj, czy nie ma możliwości logowania przy podaniu złego hasła  
-
  
 ### 8.Scenariusz testowy: Wyszukanie książki, której nie ma  
 
@@ -92,7 +108,6 @@ Nasza aplikacja ma na celu zarządzanie zasobami wirtualnej biblioteki, umożliw
 - Krok 2: W panelu wyszukiwania wpisz nazwę książki, której nie ma w bibliotece  
 
 - Krok 3: Zweryfikuj czy wyświetla się informacja o braku książki w bibliotece  
-
  
 ### 9.Scenariusz testowy: Rezerwacja książki, która jest już zarezerwowana  
 
@@ -101,7 +116,6 @@ Nasza aplikacja ma na celu zarządzanie zasobami wirtualnej biblioteki, umożliw
 - Krok 2: Wyszukaj książkę , która jest już zarezerwowana  
 
 - Krok 3: Zweryfikuj, czy nie masz możliwości zarezerwowania tej książki      
-
  
 ### 10.Scenariusz testowy : Zmiana nazwy użytkownika 
 
@@ -113,7 +127,6 @@ Nasza aplikacja ma na celu zarządzanie zasobami wirtualnej biblioteki, umożliw
 
 - Krok 4 : Zapisanie zmian 
 
-
 ### 11. Scenariusz testowy : Zmiana hasła 
 
 - Krok 1 : Logowanie do systemu 
@@ -123,7 +136,6 @@ Nasza aplikacja ma na celu zarządzanie zasobami wirtualnej biblioteki, umożliw
 - Krok 3 : Zmiana hasła 
 
 - Krok 4 : Zapisanie zmian 
-
  
 ### 12.Scenariusz testowy: Test wyszukiwania książki, która jest w bibliotece 
 
@@ -139,7 +151,6 @@ Nasza aplikacja ma na celu zarządzanie zasobami wirtualnej biblioteki, umożliw
 - Krok 1: Spróbuj dodać błędny adres e-mail do otrzymywania powiadomień. 
 
 - Krok 2: Zweryfikuj, czy system odpowiednio reaguje i nie zapisuje niepoprawnego adresu e-mail. 
-
  
 ### 14.Scenariusz testowy: Test oceny bez dodawania recenzji: 
 
@@ -147,7 +158,6 @@ Nasza aplikacja ma na celu zarządzanie zasobami wirtualnej biblioteki, umożliw
 
 - Krok 2: Sprawdź, czy system poprawnie obsługuje ocenę bez recenzji. 
 
- 
 ### 15. Scenariusz testowy : Zmiana adresu e-mail 
 
 - Krok 1 : Logowanie do systemu 
@@ -158,13 +168,11 @@ Nasza aplikacja ma na celu zarządzanie zasobami wirtualnej biblioteki, umożliw
 
 - Krok 4 : Zapisanie zmian 
 
-
 ### 16.Scenariusz testowy: Test dodawania kategorii do książki: 
 
 - Krok 1: Dodaj nową kategorię do książki. 
 
 - Krok 2: Zweryfikuj, czy kategoria została dodana poprawnie. 
-
  
 ### 17.Scenariusz testowy: Test dodawania nowej kategorii: 
 
@@ -173,7 +181,6 @@ Nasza aplikacja ma na celu zarządzanie zasobami wirtualnej biblioteki, umożliw
 - Krok 2: Przyporządkuj książkę do nowej kategorii. 
 
 - Krok 3: Zweryfikuj, czy kategoria została dodana i przyporządkowana poprawnie. 
-
  
 ### 18. Scenariusz testowy : Zmiana tytułu książki 
 
@@ -184,7 +191,6 @@ Nasza aplikacja ma na celu zarządzanie zasobami wirtualnej biblioteki, umożliw
 - Krok 3 : Zmiana tytułu książki  
 
 - Krok 4 : Zatwierdzenie zmian 
-
  
 ### 19.Scenariusz testowy: Test śledzenia ilości wypożyczonych książek: 
 
@@ -192,7 +198,6 @@ Nasza aplikacja ma na celu zarządzanie zasobami wirtualnej biblioteki, umożliw
 
 - Krok 2: Sprawdź, czy historia aktywności pokazuje poprawną ilość wypożyczonych książek. 
 
- 
 ### 20. Scenariusz testowy : Test Zmiana autora książki 
 
 - Krok 1 : Przejście do zarządzania książkami 
@@ -201,9 +206,8 @@ Nasza aplikacja ma na celu zarządzanie zasobami wirtualnej biblioteki, umożliw
 
 - Krok 3 : Zmiana autora książki 
 
-- Krok 4 : Zatwierdzenie zmian 
-
- 
+- Krok 4 : Zatwierdzenie zmian
+  
 ### 21.Scenariusz testowy: Test usuwania recenzji: 
 
 - Krok 1: Dodaj recenzję do książki. 
@@ -278,20 +282,14 @@ Nasza aplikacja ma na celu zarządzanie zasobami wirtualnej biblioteki, umożliw
 
 - Krok 3: Zweryfikuj, czy użytkownik jest dodany na listę oczekujących. 
 
- 
 ### 29. Scenariusz testowy : Usuwanie z listy oczekujących: 
-  
-
 - Krok 1: Wejdź na listę oczekujących. 
 
 - Krok 2: Usuń się z listy oczekujących. 
 
 - Krok 3: Zweryfikuj, czy użytkownik nie otrzymuje powiadomienia o dostępności książki. 
-
  
 ### 30. Scenariusz testowy : Wyświetlanie wszystkich wypożyczonych 
-
- 
 - Krok 1 : Wejdź na swój profil 
 
 - Krok 2 : Przejdź do zakładki wypożyczone 
